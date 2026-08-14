@@ -22,4 +22,4 @@
 *.woff2 binary
 *.zip binary
 *.gz binary
-src/OeXYZ.SocketScope.Desktop/Assets/Fonts/OFL-Inter.txt -whitespace
+src/OeXYZ.SocketScope.Desktop/Assets/Fonts/OFL-Inter.txt -text -whitespace
