@@ -432,12 +432,25 @@ try {
         }
 
         $dataRoot = Join-Path $extractionBase 'desktop-data'
+        $desktopFileName = $application
+        $desktopArguments = @()
+        if ($IsLinux -and [string]::IsNullOrWhiteSpace($env:DISPLAY)) {
+            $xvfbRun = Get-Command 'xvfb-run' -CommandType Application -ErrorAction SilentlyContinue
+            if (-not $xvfbRun) {
+                throw 'The Linux desktop package smoke requires DISPLAY or the xvfb-run executable.'
+            }
+            $desktopFileName = $xvfbRun.Source
+            $desktopArguments = @('-a', $application)
+        }
         $startInfo = [Diagnostics.ProcessStartInfo]::new()
-        $startInfo.FileName = $application
+        $startInfo.FileName = $desktopFileName
         $startInfo.UseShellExecute = $false
         $startInfo.CreateNoWindow = $true
         $startInfo.WorkingDirectory = $root
         $startInfo.Environment['SOCKETSCOPE_DATA_ROOT'] = $dataRoot
+        foreach ($argument in $desktopArguments) {
+            $startInfo.ArgumentList.Add($argument)
+        }
         if ($IsWindows) {
             $startInfo.WindowStyle = [Diagnostics.ProcessWindowStyle]::Hidden
         }

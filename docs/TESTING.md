@@ -89,6 +89,9 @@ screenshots supplement machine-readable logs; they are not the primary proof of 
 - desktop process startup as an ordinary user, then clean controlled termination; and
 - SHA-256 agreement with `SHA256SUMS` when provided.
 
+On a headless Linux host, the package test starts the real desktop executable under
+`xvfb-run`; it fails explicitly if neither `DISPLAY` nor `xvfb-run` is available.
+
 The automatic replacement layer additionally has unit tests for a tampered incoming
 file, successful replacement, and forced health-check rollback. The release candidate
 is exercised at the installed stable `socketscope.exe` path with two real single-file
