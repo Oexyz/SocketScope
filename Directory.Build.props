@@ -1,0 +1,37 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>14.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <DebugType>embedded</DebugType>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <RepositoryUrl>https://github.com/Oexyz/SocketScope</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>OeXYZ</Authors>
+    <Company>OeXYZ</Company>
+    <Product>OeXYZ SocketScope</Product>
+    <Copyright>Copyright © 2026 OeXYZ</Copyright>
+    <DefaultItemExcludes>$(DefaultItemExcludes);**/obj/**;**/obj-*/**;**/bin/**;**/bin-*/**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'OeXYZ.SocketScope.Desktop'">
+    <ApplicationTitle>OeXYZ SocketScope</ApplicationTitle>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(MSBuildProjectName)' == 'OeXYZ.SocketScope.Core'
+      Or '$(MSBuildProjectName)' == 'OeXYZ.SocketScope.Platform.Windows'
+      Or '$(MSBuildProjectName)' == 'OeXYZ.SocketScope.Platform.Linux'
+      Or '$(MSBuildProjectName)' == 'OeXYZ.SocketScope.Cli'
+      Or '$(MSBuildProjectName)' == 'OeXYZ.SocketScope.Desktop'
+      Or '$(MSBuildProjectName)' == 'OeXYZ.SocketScope.Updater'">
+    <RuntimeIdentifiers>win-x64;win-arm64;linux-x64;linux-arm64</RuntimeIdentifiers>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:oexyz:socketscope:report:1",
+  "title": "OeXYZ SocketScope report version 1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schemaVersion", "applicationVersion", "generatedAt", "profile", "dataReductionSummary", "captureWarnings", "observations"],
+  "properties": {
+    "schema": { "const": "urn:oexyz:socketscope:report:1" },
+    "schemaVersion": { "const": 1 },
+    "applicationVersion": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "profile": { "enum": ["full", "shareSafe"] },
+    "dataReductionSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ipAddresses", "paths", "processIds"],
+      "properties": {
+        "ipAddresses": { "type": "integer", "minimum": 0 },
+        "paths": { "type": "integer", "minimum": 0 },
+        "processIds": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "captureWarnings": { "type": "array", "maxItems": 4096, "items": { "type": "string", "maxLength": 32768 } },
+    "observations": { "type": "array", "maxItems": 100000, "items": { "$ref": "#/$defs/observation" } }
+  },
+  "$defs": {
+    "nullableString": { "type": ["string", "null"], "maxLength": 32768 },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "identityStrength", "change", "protocol", "ipVersion", "role", "localAddress", "localPort", "remoteAddress", "remotePort", "state", "processName", "processId", "executablePath", "processAvailability", "processReason", "services", "serviceAvailability", "serviceReason", "container", "containerAvailability", "containerReason", "bindingScope", "interfaceContexts", "bindingEvidence", "bindingDerivation", "firewallAssessment", "firewallAvailability", "firewallExplanation", "firewallCandidateCount", "externalReachability", "firstObservedAt", "operatingSystemCreatedAt", "evidenceSource"],
+      "properties": {
+        "id": { "type": "string", "maxLength": 32768 },
+        "identityStrength": { "enum": ["WeakTuple", "ProcessQualified", "OperatingSystemStable"] },
+        "change": { "enum": ["Unchanged", "New", "Removed", "Changed", "Ambiguous"] },
+        "protocol": { "enum": ["Tcp", "Udp"] },
+        "ipVersion": { "enum": ["IPv4", "IPv6"] },
+        "role": { "enum": ["TcpListener", "TcpConnection", "UdpEndpoint"] },
+        "localAddress": { "type": "string", "maxLength": 32768 },
+        "localPort": { "type": "integer", "minimum": 0, "maximum": 65535 },
+        "remoteAddress": { "$ref": "#/$defs/nullableString" },
+        "remotePort": { "type": ["integer", "null"], "minimum": 0, "maximum": 65535 },
+        "state": { "type": "string", "maxLength": 64 },
+        "processName": { "$ref": "#/$defs/nullableString" },
+        "processId": { "$ref": "#/$defs/nullableString" },
+        "executablePath": { "$ref": "#/$defs/nullableString" },
+        "processAvailability": { "type": "string", "maxLength": 64 },
+        "processReason": { "$ref": "#/$defs/nullableString" },
+        "services": { "type": "array", "maxItems": 256, "items": { "type": "string", "maxLength": 32768 } },
+        "serviceAvailability": { "type": "string", "maxLength": 64 },
+        "serviceReason": { "$ref": "#/$defs/nullableString" },
+        "container": { "$ref": "#/$defs/nullableString" },
+        "containerAvailability": { "type": "string", "maxLength": 64 },
+        "containerReason": { "$ref": "#/$defs/nullableString" },
+        "bindingScope": { "type": "string", "maxLength": 64 },
+        "interfaceContexts": { "type": "array", "items": { "type": "string", "maxLength": 64 } },
+        "bindingEvidence": { "type": "string", "maxLength": 64 },
+        "bindingDerivation": { "type": "string", "maxLength": 32768 },
+        "firewallAssessment": { "type": "string", "maxLength": 64 },
+        "firewallAvailability": { "type": "string", "maxLength": 64 },
+        "firewallExplanation": { "type": "string", "maxLength": 32768 },
+        "firewallCandidateCount": { "type": "integer", "minimum": 0, "maximum": 4096 },
+        "externalReachability": { "const": "NotTested" },
+        "firstObservedAt": { "type": "string", "format": "date-time" },
+        "operatingSystemCreatedAt": { "type": ["string", "null"], "format": "date-time" },
+        "evidenceSource": { "type": "string", "maxLength": 32768 }
+      }
+    }
+  }
+}

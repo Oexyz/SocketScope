@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "product": "OeXYZ SocketScope",
+  "productVersion": "1.0.0",
+  "status": "pass",
+  "scope": "Local Windows x64 release-candidate validation",
+  "package": "OeXYZ-SocketScope-v1.0.0-win-x64.exe",
+  "packageSha256": "dbe71227d20341e8df9e846d77ccc6471dbe64f20d58f5db0726ad14e8b6f994",
+  "windowsAuthenticode": "not-present",
+  "host": {
+    "operatingSystem": "Windows",
+    "architecture": "x64",
+    "elevated": false
+  },
+  "startedUtc": "2026-08-14T08:33:00.2215130+00:00",
+  "finishedUtc": "2026-08-14T08:33:23.9296265+00:00",
+  "command": "dotnet test <each test project> --configuration Release --no-restore --no-build --logger trx",
+  "totals": {
+    "suites": 7,
+    "passedSuites": 7,
+    "tests": 217,
+    "passed": 216,
+    "failed": 0,
+    "skipped": 1
+  },
+  "suites": [
+    {
+      "name": "Core",
+      "total": 61,
+      "passed": 61,
+      "failed": 0,
+      "skipped": 0,
+      "skippedTests": []
+    },
+    {
+      "name": "Updater & terminal",
+      "total": 29,
+      "passed": 29,
+      "failed": 0,
+      "skipped": 0,
+      "skippedTests": []
+    },
+    {
+      "name": "Windows provider",
+      "total": 26,
+      "passed": 25,
+      "failed": 0,
+      "skipped": 1,
+      "skippedTests": [
+        "OeXYZ.SocketScope.Platform.Windows.Tests.Storage.WindowsSecureFileStoreTests.Write_RejectsSymlinkDestinationWithoutChangingTarget"
+      ]
+    },
+    {
+      "name": "Linux provider",
+      "total": 49,
+      "passed": 49,
+      "failed": 0,
+      "skipped": 0,
+      "skippedTests": []
+    },
+    {
+      "name": "Integration",
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "skippedTests": []
+    },
+    {
+      "name": "Architecture",
+      "total": 12,
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "skippedTests": []
+    },
+    {
+      "name": "Avalonia UI smoke",
+      "total": 33,
+      "passed": 33,
+      "failed": 0,
+      "skipped": 0,
+      "skippedTests": []
+    }
+  ],
+  "limitations": [
+    "This evidence covers a local Windows x64 host only.",
+    "Cross-compiled ARM64 and Linux release assets require native-host validation.",
+    "A test screenshot supplements, but does not replace, machine-readable CI evidence."
+  ]
+}

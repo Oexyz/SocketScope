@@ -1,0 +1,38 @@
+# Build output
+**/bin/
+**/obj/
+**/bin-*/
+**/obj-*/
+artifacts/
+TestResults/
+coverage/
+
+# Local toolchain and caches
+.tools/
+.cache/
+.packages/
+
+# IDE and operating-system state
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.DS_Store
+Thumbs.db
+
+# Local application/test state
+.socketscope/
+*.local.json
+*.actual.html
+*.actual.json
+
+# Signing material must never be committed
+*.pfx
+*.p12
+*.snk
+*.key
+*.pem
+!assets/**/*.pem

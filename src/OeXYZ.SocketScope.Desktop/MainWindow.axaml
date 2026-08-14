@@ -1,0 +1,115 @@
+<Window
+    x:Class="OeXYZ.SocketScope.Desktop.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:views="using:OeXYZ.SocketScope.Desktop.Views"
+    xmlns:vm="using:OeXYZ.SocketScope.Desktop.ViewModels"
+    x:DataType="vm:MainWindowViewModel"
+    Title="OeXYZ SocketScope"
+    Icon="/Assets/Icons/socketscope.ico"
+    Width="1200"
+    Height="760"
+    MinWidth="760"
+    MinHeight="520"
+    WindowState="Maximized"
+    WindowStartupLocation="CenterScreen">
+  <Grid x:Name="ShellGrid" ColumnDefinitions="220,*">
+    <Border x:Name="Sidebar" Grid.Column="0" Background="{StaticResource SidebarBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+      <Grid Margin="14" RowDefinitions="Auto,Auto,*,Auto">
+        <Grid ColumnDefinitions="42,*" Margin="6,8,6,22">
+          <Border Width="34" Height="34" CornerRadius="9" Background="#17283A" BorderBrush="{StaticResource AccentBrush}" BorderThickness="1">
+            <Viewbox Margin="7">
+              <Canvas Width="20" Height="20">
+                <Ellipse Canvas.Left="1" Canvas.Top="1" Width="18" Height="18" Stroke="#33A3FF" StrokeThickness="1.8" />
+                <Ellipse Canvas.Left="7" Canvas.Top="7" Width="6" Height="6" Fill="#43D7A0" />
+                <Line StartPoint="14,6" EndPoint="19,1" Stroke="#33A3FF" StrokeThickness="1.8" />
+              </Canvas>
+            </Viewbox>
+          </Border>
+          <StackPanel Grid.Column="1" VerticalAlignment="Center">
+            <TextBlock Text="OeXYZ" Classes="eyebrow" Foreground="{StaticResource AccentHoverBrush}" />
+            <TextBlock Text="{Binding Text.AppName}" FontSize="17" FontWeight="SemiBold" />
+          </StackPanel>
+        </Grid>
+
+        <Border Grid.Row="1" Classes="status-pill" Margin="4,0,4,14">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <Ellipse Width="7" Height="7" Fill="{StaticResource SuccessBrush}" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding Text.ReadOnly}" Classes="eyebrow" Foreground="{StaticResource SuccessBrush}" VerticalAlignment="Center" />
+          </StackPanel>
+        </Border>
+
+        <StackPanel Grid.Row="2">
+          <Button x:Name="OverviewNavigation" Classes="nav" Classes.selected="{Binding IsOverview}" Command="{Binding NavigateCommand}" CommandParameter="Overview">
+            <TextBlock Text="{Binding Text.Overview}" />
+          </Button>
+          <Button Classes="nav" Classes.selected="{Binding IsConnections}" Command="{Binding NavigateCommand}" CommandParameter="Connections">
+            <TextBlock Text="{Binding Text.Connections}" />
+          </Button>
+          <Button Classes="nav" Classes.selected="{Binding IsListeners}" Command="{Binding NavigateCommand}" CommandParameter="Listeners">
+            <TextBlock Text="{Binding Text.Listeners}" />
+          </Button>
+          <Button Classes="nav" Classes.selected="{Binding IsChanges}" Command="{Binding NavigateCommand}" CommandParameter="Changes">
+            <TextBlock Text="{Binding Text.Changes}" />
+          </Button>
+          <Button Classes="nav" Classes.selected="{Binding IsReports}" Command="{Binding NavigateCommand}" CommandParameter="Reports">
+            <TextBlock Text="{Binding Text.Reports}" />
+          </Button>
+          <Button Classes="nav" Classes.selected="{Binding IsSettings}" Command="{Binding NavigateCommand}" CommandParameter="Settings">
+            <TextBlock Text="{Binding Text.Settings}" />
+          </Button>
+          <Button x:Name="HelpNavigation" Classes="nav" Classes.selected="{Binding IsHelp}" Command="{Binding NavigateCommand}" CommandParameter="Help">
+            <TextBlock Text="{Binding Text.HelpAndDiagnostics}" />
+          </Button>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Margin="6,12,6,4" Spacing="3">
+          <TextBlock Text="{Binding Text.Tagline}" Classes="muted" FontSize="11" TextWrapping="Wrap" />
+          <TextBlock Text="{Binding Version, StringFormat='v{0}'}" Classes="muted" FontSize="11" />
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <Grid Grid.Column="1" RowDefinitions="64,Auto,*">
+      <Border Grid.Row="0" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="24,0">
+        <Grid ColumnDefinitions="*,Auto,Auto" VerticalAlignment="Center">
+          <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+            <Ellipse Width="8" Height="8" Fill="{StaticResource AccentHoverBrush}" />
+            <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" />
+            <TextBlock x:Name="LastUpdatedLabel" Text="{Binding Text.LastUpdated}" Classes="muted" VerticalAlignment="Center" />
+            <TextBlock x:Name="LastUpdatedValue" Text="{Binding LastUpdatedText}" Classes="muted" VerticalAlignment="Center" />
+          </StackPanel>
+          <Button Grid.Column="1" Margin="0,0,10,0" Command="{Binding TogglePauseCommand}" ToolTip.Tip="{Binding PauseButtonText}">
+            <TextBlock Text="{Binding PauseButtonText}" />
+          </Button>
+          <Button x:Name="RefreshButton" Grid.Column="2" Classes="primary" Command="{Binding RefreshCommand}">
+            <TextBlock Text="{Binding Text.Refresh}" />
+          </Button>
+        </Grid>
+      </Border>
+
+      <Border x:Name="CompactNavigation" Grid.Row="1" IsVisible="False" Background="{StaticResource SidebarBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+          <StackPanel Orientation="Horizontal" Margin="10,6" Spacing="4">
+            <Button Classes="nav" Classes.selected="{Binding IsOverview}" Command="{Binding NavigateCommand}" CommandParameter="Overview"><TextBlock Text="{Binding Text.Overview}" /></Button>
+            <Button Classes="nav" Classes.selected="{Binding IsConnections}" Command="{Binding NavigateCommand}" CommandParameter="Connections"><TextBlock Text="{Binding Text.Connections}" /></Button>
+            <Button Classes="nav" Classes.selected="{Binding IsListeners}" Command="{Binding NavigateCommand}" CommandParameter="Listeners"><TextBlock Text="{Binding Text.Listeners}" /></Button>
+            <Button Classes="nav" Classes.selected="{Binding IsChanges}" Command="{Binding NavigateCommand}" CommandParameter="Changes"><TextBlock Text="{Binding Text.Changes}" /></Button>
+            <Button Classes="nav" Classes.selected="{Binding IsReports}" Command="{Binding NavigateCommand}" CommandParameter="Reports"><TextBlock Text="{Binding Text.Reports}" /></Button>
+            <Button Classes="nav" Classes.selected="{Binding IsSettings}" Command="{Binding NavigateCommand}" CommandParameter="Settings"><TextBlock Text="{Binding Text.Settings}" /></Button>
+            <Button Classes="nav" Classes.selected="{Binding IsHelp}" Command="{Binding NavigateCommand}" CommandParameter="Help"><TextBlock Text="{Binding Text.HelpAndDiagnostics}" /></Button>
+          </StackPanel>
+        </ScrollViewer>
+      </Border>
+
+      <Grid Grid.Row="2">
+        <views:OverviewView IsVisible="{Binding IsOverview}" />
+        <views:InventoryView x:Name="InventoryContent" IsVisible="{Binding IsInventory}" />
+        <views:ChangesView IsVisible="{Binding IsChanges}" />
+        <views:ReportsView IsVisible="{Binding IsReports}" />
+        <views:SettingsView IsVisible="{Binding IsSettings}" />
+        <views:HelpView IsVisible="{Binding IsHelp}" />
+      </Grid>
+    </Grid>
+  </Grid>
+</Window>

@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OeXYZ.SocketScope.Core/OeXYZ.SocketScope.Core.csproj" />
+    <Project Path="src/OeXYZ.SocketScope.Platform.Windows/OeXYZ.SocketScope.Platform.Windows.csproj" />
+    <Project Path="src/OeXYZ.SocketScope.Platform.Linux/OeXYZ.SocketScope.Platform.Linux.csproj" />
+    <Project Path="src/OeXYZ.SocketScope.Cli/OeXYZ.SocketScope.Cli.csproj" />
+    <Project Path="src/OeXYZ.SocketScope.Desktop/OeXYZ.SocketScope.Desktop.csproj" />
+    <Project Path="src/OeXYZ.SocketScope.Updater/OeXYZ.SocketScope.Updater.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/OeXYZ.SocketScope.Core.Tests/OeXYZ.SocketScope.Core.Tests.csproj" />
+    <Project Path="tests/OeXYZ.SocketScope.Platform.Windows.Tests/OeXYZ.SocketScope.Platform.Windows.Tests.csproj" />
+    <Project Path="tests/OeXYZ.SocketScope.Platform.Linux.Tests/OeXYZ.SocketScope.Platform.Linux.Tests.csproj" />
+    <Project Path="tests/OeXYZ.SocketScope.IntegrationTests/OeXYZ.SocketScope.IntegrationTests.csproj" />
+    <Project Path="tests/OeXYZ.SocketScope.ArchitectureTests/OeXYZ.SocketScope.ArchitectureTests.csproj" />
+    <Project Path="tests/OeXYZ.SocketScope.UiSmokeTests/OeXYZ.SocketScope.UiSmokeTests.csproj" />
+    <Project Path="tests/OeXYZ.SocketScope.Updater.Tests/OeXYZ.SocketScope.Updater.Tests.csproj" />
+    <Project Path="tests/OeXYZ.SocketScope.TestFixture/OeXYZ.SocketScope.TestFixture.csproj" />
+  </Folder>
+</Solution>

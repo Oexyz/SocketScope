@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title description">
+  <title id="title">OeXYZ SocketScope icon</title>
+  <desc id="description">A restrained blue scope ring around a green local endpoint on a dark surface.</desc>
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="#0b0f16" stroke="#29384b" stroke-width="16"/>
+  <circle cx="240" cy="272" r="132" fill="#101c2a" stroke="#1688f8" stroke-width="28"/>
+  <path d="M338 174 426 86M352 112h74v74" fill="none" stroke="#33a3ff" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M240 196v36M240 312v36M164 272h36M280 272h36" fill="none" stroke="#42546b" stroke-width="20" stroke-linecap="round"/>
+  <circle cx="240" cy="272" r="42" fill="#43d7a0"/>
+</svg>

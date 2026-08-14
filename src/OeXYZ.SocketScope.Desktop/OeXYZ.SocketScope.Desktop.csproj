@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>OeXYZ.SocketScope</AssemblyName>
+    <ApplicationIcon>Assets/Icons/socketscope.ico</ApplicationIcon>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <PublishSingleFile Condition="'$(RuntimeIdentifier)' != ''">true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract Condition="'$(RuntimeIdentifier)' != ''">true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile Condition="'$(RuntimeIdentifier)' != ''">true</EnableCompressionInSingleFile>
+    <PublishTrimmed>false</PublishTrimmed>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../OeXYZ.SocketScope.Core/OeXYZ.SocketScope.Core.csproj" />
+    <ProjectReference Include="../OeXYZ.SocketScope.Cli/OeXYZ.SocketScope.Cli.csproj" />
+    <ProjectReference Include="../OeXYZ.SocketScope.Platform.Linux/OeXYZ.SocketScope.Platform.Linux.csproj" />
+    <ProjectReference Include="../OeXYZ.SocketScope.Platform.Windows/OeXYZ.SocketScope.Platform.Windows.csproj" />
+    <ProjectReference Include="../OeXYZ.SocketScope.Updater/OeXYZ.SocketScope.Updater.csproj" />
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Assets/**" />
+    <None Remove="Assets/Icons/socketscope.ico" />
+    <EmbeddedResource Include="../../LICENSE" Link="Legal/LICENSE.txt" LogicalName="OeXYZ.SocketScope.Legal.LICENSE.txt" />
+    <EmbeddedResource Include="../../THIRD_PARTY_NOTICES.md" Link="Legal/THIRD_PARTY_NOTICES.md" LogicalName="OeXYZ.SocketScope.Legal.THIRD_PARTY_NOTICES.md" />
+    <EmbeddedResource Include="Assets/Fonts/OFL-Inter.txt" LogicalName="OeXYZ.SocketScope.Legal.OFL-Inter.txt" />
+  </ItemGroup>
+</Project>

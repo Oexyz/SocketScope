@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "reviewedUtc": "2026-08-14T08:33:31.9959038Z",
+  "reviewScope": [
+    "full-resolution readability",
+    "clipped or obscured controls and column headings",
+    "responsive layout, top-aligned custom text input, and centered Terminal command actions",
+    "localized clipboard guidance, column reset, keyboard help, and metadata-only diagnostics",
+    "visible UI Automation names and editable/read-only values",
+    "desktop and taskbar content",
+    "user and host identifiers",
+    "home paths and unrelated network addresses"
+  ],
+  "result": "pass",
+  "screenshots": [
+    {
+      "file": "../images/socketscope-connections.png",
+      "source": "self-contained release candidate plus controlled local socket fixture",
+      "width": 1842,
+      "height": 1033,
+      "bytes": 104418,
+      "sha256": "061bc8e5613aa777c0e9d72a705b41c395986855a3c2fa36831c21065ebd594a",
+      "visualReview": "pass"
+    },
+    {
+      "file": "../images/socketscope-listeners.png",
+      "source": "self-contained release candidate plus controlled local socket fixture",
+      "width": 1842,
+      "height": 1033,
+      "bytes": 114178,
+      "sha256": "c5e02891a30cd52ea031cb4be4ed3829eb45aad655458ad2a8d55d894ee4e1a7",
+      "visualReview": "pass"
+    },
+    {
+      "file": "../images/socketscope-reports.png",
+      "source": "self-contained release candidate; no report contents displayed",
+      "width": 1842,
+      "height": 1033,
+      "bytes": 133095,
+      "sha256": "e7e9f1f048663c740937a07082caa0c6696e197074aebe4708d6d6e99b1652f2",
+      "visualReview": "pass"
+    },
+    {
+      "file": "../images/socketscope-settings-export.png",
+      "source": "self-contained release candidate; configurable reduced fields and in-memory preview",
+      "width": 1842,
+      "height": 1033,
+      "bytes": 138639,
+      "sha256": "5b4cb8b29ee3b970f4555148c30dc14f57804398258cd070132b1fb89f5e005c",
+      "visualReview": "pass"
+    },
+    {
+      "file": "../images/socketscope-settings-terminal.png",
+      "source": "self-contained release candidate; sanitized temporary data drive, fixed install path, and no PATH mutation",
+      "width": 1842,
+      "height": 1033,
+      "bytes": 129092,
+      "sha256": "d8b3fe178c41699509c50f07e9a5e14915377994a4c3ac9ffe01dd55dfac84b8",
+      "visualReview": "pass"
+    },
+    {
+      "file": "../images/socketscope-help-glossary.png",
+      "source": "self-contained release candidate; offline terminology and keyboard help",
+      "width": 1842,
+      "height": 1033,
+      "bytes": 152324,
+      "sha256": "0eff43c1dffbddc319d73eb16d6fb70b8a3f49cc919481e3cb9a23a4b143985a",
+      "visualReview": "pass"
+    },
+    {
+      "file": "../images/socketscope-help-diagnostics.png",
+      "source": "self-contained release candidate; metadata-only platform, runtime, and provider status",
+      "width": 1842,
+      "height": 1033,
+      "bytes": 144847,
+      "sha256": "6ddb728864ac7f5f9efe6eeb7140f3564125b6a8518052906fa41c6205eaf557",
+      "visualReview": "pass"
+    },
+    {
+      "file": "../images/socketscope-responsive-compact.png",
+      "source": "self-contained release candidate; aggregate counts only",
+      "width": 950,
+      "height": 673,
+      "bytes": 61863,
+      "sha256": "faf0240c10fa79b04c86b30487ff4d2ce12beeef893285e314a85c38641579b5",
+      "visualReview": "pass"
+    },
+    {
+      "file": "../images/socketscope-test-evidence.png",
+      "source": "fresh machine-readable TRX summaries and verified candidate hash/status",
+      "width": 1500,
+      "height": 1020,
+      "bytes": 57264,
+      "sha256": "b5e66eca2dafce1416cc6bd9a2d70ad39a6772e407d27d5ecf3b909f8af3bf5b",
+      "visualReview": "pass"
+    }
+  ]
+}

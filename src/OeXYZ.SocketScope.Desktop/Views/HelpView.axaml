@@ -1,0 +1,120 @@
+<UserControl
+    x:Class="OeXYZ.SocketScope.Desktop.Views.HelpView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:OeXYZ.SocketScope.Desktop.ViewModels"
+    x:DataType="vm:MainWindowViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+    <Grid
+        x:Name="LayoutRoot"
+        Margin="24"
+        MaxWidth="1200"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Top"
+        RowDefinitions="Auto,Auto,Auto,Auto"
+        RowSpacing="18">
+      <StackPanel Grid.Row="0" Spacing="4">
+        <TextBlock Text="{Binding Text.HelpTitle}" Classes="title" />
+        <TextBlock Text="{Binding Text.HelpHint}" Classes="muted" TextWrapping="Wrap" />
+      </StackPanel>
+
+      <Border Grid.Row="1" Classes="card">
+        <StackPanel Spacing="14">
+          <TextBlock Text="{Binding Text.Glossary}" Classes="section-title" />
+          <Grid x:Name="GlossaryGrid" ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+            <Border x:Name="LocalhostCard" Grid.Column="0" Grid.Row="0" Classes="notice">
+              <StackPanel Spacing="5">
+                <TextBlock Text="{Binding Text.LocalhostTerm}" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Text.LocalhostExplanation}" Classes="muted" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+            <Border x:Name="LanCard" Grid.Column="1" Grid.Row="0" Classes="notice">
+              <StackPanel Spacing="5">
+                <TextBlock Text="{Binding Text.LanBoundTerm}" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Text.LanBoundExplanation}" Classes="muted" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+            <Border x:Name="WildcardCard" Grid.Column="0" Grid.Row="1" Classes="notice">
+              <StackPanel Spacing="5">
+                <TextBlock Text="{Binding Text.WildcardTerm}" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Text.WildcardExplanation}" Classes="muted" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+            <Border x:Name="FirewallCandidateCard" Grid.Column="1" Grid.Row="1" Classes="notice">
+              <StackPanel Spacing="5">
+                <TextBlock Text="{Binding Text.FirewallCandidateTerm}" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Text.FirewallCandidateExplanation}" Classes="muted" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+            <Border x:Name="UnknownCard" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Classes="notice">
+              <StackPanel Spacing="5">
+                <TextBlock Text="{Binding Text.UnknownTerm}" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding Text.UnknownExplanation}" Classes="muted" TextWrapping="Wrap" />
+              </StackPanel>
+            </Border>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Row="2" Classes="card">
+        <StackPanel Spacing="10">
+          <TextBlock Text="{Binding Text.KeyboardShortcuts}" Classes="section-title" />
+          <TextBlock Text="{Binding Text.ShortcutHelp}" />
+          <TextBlock Text="{Binding Text.ShortcutRefresh}" />
+          <TextBlock Text="{Binding Text.ShortcutSearch}" />
+          <TextBlock Text="{Binding Text.ShortcutCopy}" />
+          <TextBlock Text="{Binding Text.ShortcutNavigation}" Classes="muted" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Row="3" Classes="card">
+        <StackPanel Spacing="14">
+          <StackPanel Spacing="4">
+            <TextBlock Text="{Binding Text.SystemDiagnostics}" Classes="section-title" />
+            <TextBlock Text="{Binding Text.SystemDiagnosticsHint}" Classes="muted" TextWrapping="Wrap" />
+          </StackPanel>
+
+          <Grid ColumnDefinitions="210,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="16" RowSpacing="9">
+            <TextBlock Grid.Row="0" Text="{Binding Text.ApplicationVersion}" Classes="eyebrow" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Version}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="1" Text="{Binding Text.OperatingSystem}" Classes="eyebrow" />
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding OperatingSystemDisplay}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="2" Text="{Binding Text.Architecture}" Classes="eyebrow" />
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding ArchitectureDisplay}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="3" Text="{Binding Text.Runtime}" Classes="eyebrow" />
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding RuntimeDisplay}" TextWrapping="Wrap" />
+            <TextBlock Grid.Row="4" Text="{Binding Text.CaptureStatus}" Classes="eyebrow" />
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding DiagnosticCaptureStatus}" TextWrapping="Wrap" />
+          </Grid>
+
+          <StackPanel Spacing="7">
+            <TextBlock Text="{Binding Text.ProviderNotices}" Classes="eyebrow" />
+            <TextBlock Text="{Binding DiagnosticProviderSummary}" Classes="muted" TextWrapping="Wrap" />
+            <ItemsControl ItemsSource="{Binding DiagnosticNotices}" IsVisible="{Binding HasDiagnosticNotices}">
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:DiagnosticNoticeViewModel">
+                  <Border Classes="notice" Padding="9" Margin="0,0,0,6">
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                      <StackPanel Spacing="2">
+                        <TextBlock Text="{Binding Provider}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                        <TextBlock Text="{Binding Code}" Classes="muted" TextWrapping="Wrap" />
+                      </StackPanel>
+                      <TextBlock Grid.Column="1" Text="{Binding Status}" Foreground="{StaticResource WarningBrush}" VerticalAlignment="Center" />
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <Button x:Name="CopyDiagnosticsButton" Classes="primary" Command="{Binding CopyDiagnosticsCommand}">
+              <TextBlock Text="{Binding Text.CopyDiagnostics}" />
+            </Button>
+            <TextBlock Text="{Binding ActionStatus}" Classes="muted" VerticalAlignment="Center" TextWrapping="Wrap" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </Grid>
+  </ScrollViewer>
+</UserControl>

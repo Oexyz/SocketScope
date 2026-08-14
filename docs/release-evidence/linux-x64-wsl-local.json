@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "product": "OeXYZ SocketScope",
+  "productVersion": "1.0.0",
+  "status": "pass",
+  "scope": "WSL 2 Ubuntu x64 final-package CLI/provider smoke",
+  "finishedUtc": "2026-08-14T08:35:24Z",
+  "package": "OeXYZ-SocketScope-v1.0.0-linux-x64.tar.gz",
+  "packageSha256": "020708175f51c2468da11a964fed6cd828493ad168dd7a0a6052ac0f3ae4cfb2",
+  "host": {
+    "environment": "WSL 2 Ubuntu",
+    "architecture": "x86_64"
+  },
+  "assertions": {
+    "version": "pass",
+    "cliHelp": "pass",
+    "reportSchemaMarker": "urn:oexyz:socketscope:report:2",
+    "snapshotSchemaMarker": "urn:oexyz:socketscope:snapshot:1",
+    "provider": "linux.sock-diag",
+    "sockDiagRows": 10
+  },
+  "limitations": [
+    "WSL is provider/CLI evidence, not native Linux desktop validation.",
+    "The smoke uses invariant globalization because this minimal WSL image has no ICU package.",
+    "Native Linux ARM64 and desktop accessibility remain separate release-host gates."
+  ]
+}

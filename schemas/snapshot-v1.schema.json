@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:oexyz:socketscope:snapshot:1",
+  "title": "OeXYZ SocketScope snapshot version 1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schemaVersion", "applicationVersion", "createdAt", "generation"],
+  "properties": {
+    "schema": { "const": "urn:oexyz:socketscope:snapshot:1" },
+    "schemaVersion": { "const": 1 },
+    "applicationVersion": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "generation": { "$ref": "#/$defs/generation" }
+  },
+  "$defs": {
+    "boundedString": { "type": "string", "maxLength": 32768 },
+    "nullableBoundedString": { "type": ["string", "null"], "maxLength": 32768 },
+    "endpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["address", "port"],
+      "properties": {
+        "address": { "type": "string", "minLength": 1, "maxLength": 32768 },
+        "port": { "type": "integer", "minimum": 0, "maximum": 65535 }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "availability", "code", "detail"],
+      "properties": {
+        "provider": { "$ref": "#/$defs/boundedString" },
+        "availability": { "enum": ["available", "unsupported", "permissionDenied", "partial", "timedOut", "cancelled", "failed", "notApplicable"] },
+        "code": { "$ref": "#/$defs/boundedString" },
+        "detail": { "$ref": "#/$defs/nullableBoundedString" }
+      }
+    },
+    "rawSocket": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nativeId", "protocol", "ipVersion", "role", "localEndpoint", "remoteEndpoint", "state", "processId", "operatingSystemCreatedAt", "networkNamespace", "provider"],
+      "properties": {
+        "nativeId": { "$ref": "#/$defs/boundedString" },
+        "protocol": { "enum": ["tcp", "udp"] },
+        "ipVersion": { "enum": ["iPv4", "iPv6"] },
+        "role": { "enum": ["tcpListener", "tcpConnection", "udpEndpoint"] },
+        "localEndpoint": { "$ref": "#/$defs/endpoint" },
+        "remoteEndpoint": { "anyOf": [{ "$ref": "#/$defs/endpoint" }, { "type": "null" }] },
+        "state": { "enum": ["notApplicable", "unknown", "closed", "listen", "synSent", "synReceived", "established", "finWait1", "finWait2", "closeWait", "closing", "lastAck", "timeWait", "deleteTcb"] },
+        "processId": { "type": ["integer", "null"], "minimum": 0 },
+        "operatingSystemCreatedAt": { "type": ["string", "null"], "format": "date-time" },
+        "networkNamespace": { "$ref": "#/$defs/boundedString" },
+        "provider": { "$ref": "#/$defs/boundedString" }
+      }
+    },
+    "processIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["processId", "startedAt", "startToken"],
+      "properties": {
+        "processId": { "type": "integer", "minimum": 0 },
+        "startedAt": { "type": ["string", "null"], "format": "date-time" },
+        "startToken": { "$ref": "#/$defs/nullableBoundedString" }
+      }
+    },
+    "process": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["identity", "name", "executablePath", "availability", "reasonCode"],
+      "properties": {
+        "identity": { "$ref": "#/$defs/processIdentity" },
+        "name": { "$ref": "#/$defs/nullableBoundedString" },
+        "executablePath": { "$ref": "#/$defs/nullableBoundedString" },
+        "availability": { "enum": ["available", "unsupported", "permissionDenied", "partial", "timedOut", "cancelled", "failed", "notApplicable"] },
+        "reasonCode": { "$ref": "#/$defs/nullableBoundedString" }
+      }
+    },
+    "serviceIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "displayName", "manager", "sharesProcess"],
+      "properties": {
+        "id": { "$ref": "#/$defs/boundedString" },
+        "displayName": { "$ref": "#/$defs/boundedString" },
+        "manager": { "$ref": "#/$defs/boundedString" },
+        "sharesProcess": { "type": "boolean" }
+      }
+    },
+    "service": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["processId", "services", "availability", "reasonCode"],
+      "properties": {
+        "processId": { "type": "integer", "minimum": 0 },
+        "services": { "type": "array", "maxItems": 256, "items": { "$ref": "#/$defs/serviceIdentity" } },
+        "availability": { "enum": ["available", "unsupported", "permissionDenied", "partial", "timedOut", "cancelled", "failed", "notApplicable"] },
+        "reasonCode": { "$ref": "#/$defs/nullableBoundedString" }
+      }
+    },
+    "containerIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime", "id", "name", "evidence"],
+      "properties": {
+        "runtime": { "$ref": "#/$defs/boundedString" },
+        "id": { "$ref": "#/$defs/boundedString" },
+        "name": { "$ref": "#/$defs/nullableBoundedString" },
+        "evidence": { "$ref": "#/$defs/boundedString" }
+      }
+    },
+    "container": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["processId", "container", "availability", "reasonCode"],
+      "properties": {
+        "processId": { "type": "integer", "minimum": 0 },
+        "container": { "anyOf": [{ "$ref": "#/$defs/containerIdentity" }, { "type": "null" }] },
+        "availability": { "enum": ["available", "unsupported", "permissionDenied", "partial", "timedOut", "cancelled", "failed", "notApplicable"] },
+        "reasonCode": { "$ref": "#/$defs/nullableBoundedString" }
+      }
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "contexts", "matchingInterfaceIds", "derivationCode", "evidenceKind"],
+      "properties": {
+        "scope": { "enum": ["unknown", "loopbackOnly", "specificInterface", "wildcard"] },
+        "contexts": { "type": "array", "items": { "enum": ["unknown", "loopback", "lanPrivate", "linkLocal", "globalAddressed", "tunnelOrVpn", "containerOrVirtual", "other"] } },
+        "matchingInterfaceIds": { "type": "array", "items": { "$ref": "#/$defs/boundedString" } },
+        "derivationCode": { "$ref": "#/$defs/boundedString" },
+        "evidenceKind": { "enum": ["observed", "derived", "candidate", "unavailable", "notTested"] }
+      }
+    },
+    "firewallRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "action", "direction", "protocol", "localPorts", "localAddresses", "profilesOrZones", "matchReason", "unsupportedConditions"],
+      "properties": {
+        "id": { "$ref": "#/$defs/boundedString" },
+        "name": { "$ref": "#/$defs/boundedString" },
+        "action": { "enum": ["unknown", "allow", "block"] },
+        "direction": { "enum": ["unknown", "inbound", "outbound"] },
+        "protocol": { "$ref": "#/$defs/boundedString" },
+        "localPorts": { "$ref": "#/$defs/boundedString" },
+        "localAddresses": { "$ref": "#/$defs/boundedString" },
+        "profilesOrZones": { "$ref": "#/$defs/boundedString" },
+        "matchReason": { "$ref": "#/$defs/boundedString" },
+        "unsupportedConditions": { "type": "array", "maxItems": 256, "items": { "$ref": "#/$defs/boundedString" } }
+      }
+    },
+    "firewall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assessment", "candidateRules", "availability", "explanationCode"],
+      "properties": {
+        "assessment": { "enum": ["notEvaluated", "allowRuleMayMatch", "blockRuleMayMatch", "conflictingCandidates", "noMatchingRuleFound", "permissionDenied", "unsupported", "partial"] },
+        "candidateRules": { "type": "array", "maxItems": 4096, "items": { "$ref": "#/$defs/firewallRule" } },
+        "availability": { "enum": ["available", "unsupported", "permissionDenied", "partial", "timedOut", "cancelled", "failed", "notApplicable"] },
+        "explanationCode": { "$ref": "#/$defs/boundedString" }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "identityStrength", "socket", "process", "service", "container", "binding", "firewall", "firstObservedAt", "change"],
+      "properties": {
+        "id": { "$ref": "#/$defs/boundedString" },
+        "identityStrength": { "enum": ["weakTuple", "processQualified", "operatingSystemStable"] },
+        "socket": { "$ref": "#/$defs/rawSocket" },
+        "process": { "$ref": "#/$defs/process" },
+        "service": { "$ref": "#/$defs/service" },
+        "container": { "$ref": "#/$defs/container" },
+        "binding": { "$ref": "#/$defs/binding" },
+        "firewall": { "$ref": "#/$defs/firewall" },
+        "firstObservedAt": { "type": "string", "format": "date-time" },
+        "change": { "enum": ["unchanged", "new", "removed", "changed", "ambiguous"] }
+      }
+    },
+    "generation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generationId", "captureStartedAt", "captureCompletedAt", "networkNamespace", "observations", "diagnostics", "isComplete", "truncationReason"],
+      "properties": {
+        "generationId": { "type": "string", "format": "uuid" },
+        "captureStartedAt": { "type": "string", "format": "date-time" },
+        "captureCompletedAt": { "type": "string", "format": "date-time" },
+        "networkNamespace": { "$ref": "#/$defs/boundedString" },
+        "observations": { "type": "array", "maxItems": 100000, "items": { "$ref": "#/$defs/observation" } },
+        "diagnostics": { "type": "array", "maxItems": 4096, "items": { "$ref": "#/$defs/diagnostic" } },
+        "isComplete": { "type": "boolean" },
+        "truncationReason": { "$ref": "#/$defs/nullableBoundedString" }
+      }
+    }
+  }
+}

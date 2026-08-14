@@ -1,0 +1,73 @@
+<UserControl
+    x:Class="OeXYZ.SocketScope.Desktop.Views.ChangesView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:infra="using:OeXYZ.SocketScope.Desktop.Infrastructure"
+    xmlns:vm="using:OeXYZ.SocketScope.Desktop.ViewModels"
+    x:DataType="vm:MainWindowViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+  <Grid x:Name="LayoutRoot" Margin="24" MaxWidth="1440" HorizontalAlignment="Stretch" RowDefinitions="Auto,Auto,Auto" RowSpacing="18">
+    <StackPanel Grid.Row="0">
+      <TextBlock Text="{Binding Text.ChangeLog}" Classes="title" />
+      <TextBlock Text="{Binding Text.ChangeLogHint}" Classes="muted" TextWrapping="Wrap" />
+    </StackPanel>
+
+    <Border Grid.Row="1" Classes="card">
+      <Grid x:Name="SnapshotActionsGrid" ColumnDefinitions="Auto,240,240,Auto,*" RowDefinitions="Auto" ColumnSpacing="12" RowSpacing="10">
+        <Button x:Name="SaveSnapshotButton" Grid.Column="0" Classes="primary" Command="{Binding SaveSnapshotCommand}">
+          <TextBlock Text="{Binding Text.SaveSnapshot}" />
+        </Button>
+        <ComboBox x:Name="SnapshotASelector" Grid.Column="1" ItemsSource="{Binding SnapshotItems}" SelectedItem="{Binding SelectedSnapshotA, Mode=TwoWay}" PlaceholderText="{Binding Text.SnapshotA}">
+          <ComboBox.ItemTemplate><DataTemplate x:DataType="infra:LocalSnapshotItem"><TextBlock Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis" /></DataTemplate></ComboBox.ItemTemplate>
+        </ComboBox>
+        <ComboBox x:Name="SnapshotBSelector" Grid.Column="2" ItemsSource="{Binding SnapshotItems}" SelectedItem="{Binding SelectedSnapshotB, Mode=TwoWay}" PlaceholderText="{Binding Text.SnapshotB}">
+          <ComboBox.ItemTemplate><DataTemplate x:DataType="infra:LocalSnapshotItem"><TextBlock Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis" /></DataTemplate></ComboBox.ItemTemplate>
+        </ComboBox>
+        <Button x:Name="CompareSnapshotsButton" Grid.Column="3" Command="{Binding CompareSnapshotsCommand}">
+          <TextBlock Text="{Binding Text.CompareSnapshots}" />
+        </Button>
+        <TextBlock x:Name="SnapshotActionStatus" Grid.Column="4" Text="{Binding ActionStatus}" Classes="muted" TextWrapping="Wrap" VerticalAlignment="Center" />
+      </Grid>
+    </Border>
+
+    <Border Grid.Row="2" Classes="card" Padding="0" MinHeight="320">
+      <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+      <Grid x:Name="ChangesTableContent" MinWidth="1050" MinHeight="320" RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" Margin="18,12" ColumnDefinitions="*,Auto" ColumnSpacing="12">
+          <TextBlock Text="{Binding Text.CopySelectionHint}" Classes="muted" TextWrapping="Wrap" VerticalAlignment="Center" />
+          <Button x:Name="ResetChangesColumnsButton" Grid.Column="1" MinHeight="30" Padding="10,4">
+            <TextBlock Text="{Binding Text.ResetColumns}" />
+          </Button>
+        </Grid>
+        <DataGrid
+            x:Name="ChangesDataGrid"
+            Grid.Row="1"
+            ItemsSource="{Binding ChangeRows}"
+            IsReadOnly="True"
+            AutoGenerateColumns="False"
+            HeadersVisibility="Column"
+            CanUserReorderColumns="True"
+            CanUserResizeColumns="True"
+            CanUserSortColumns="False"
+            SelectionMode="Extended"
+            ClipboardCopyMode="IncludeHeader"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+          <DataGrid.Columns>
+            <DataGridTemplateColumn Header="Detected at" Width="160" MinWidth="125" ClipboardContentBinding="{Binding Detected}"><DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ChangeRowViewModel"><TextBlock Text="{Binding Detected}" Margin="8,7" Classes="muted" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+            <DataGridTemplateColumn Header="Change" Width="130" MinWidth="95" ClipboardContentBinding="{Binding Change}"><DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ChangeRowViewModel"><TextBlock Text="{Binding Change}" Margin="8,7" FontWeight="SemiBold" Foreground="{StaticResource SuccessBrush}" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+            <DataGridTemplateColumn Header="Protocol" Width="105" MinWidth="90" ClipboardContentBinding="{Binding Protocol}"><DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ChangeRowViewModel"><TextBlock Text="{Binding Protocol}" Margin="8,7" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+            <DataGridTemplateColumn Header="Local" Width="2*" MinWidth="140" ClipboardContentBinding="{Binding LocalEndpoint}"><DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ChangeRowViewModel"><TextBlock Text="{Binding LocalEndpoint}" Margin="8,7" TextTrimming="CharacterEllipsis" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+            <DataGridTemplateColumn Header="Process" Width="180" MinWidth="110" ClipboardContentBinding="{Binding Process}"><DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ChangeRowViewModel"><TextBlock Text="{Binding Process}" Margin="8,7" TextTrimming="CharacterEllipsis" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+            <DataGridTemplateColumn Header="Changed fields" Width="2*" MinWidth="160" ClipboardContentBinding="{Binding Fields}"><DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ChangeRowViewModel"><TextBlock Text="{Binding Fields}" Margin="8,7" Classes="muted" TextTrimming="CharacterEllipsis" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+          </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding !HasChanges}" IsHitTestVisible="False" Spacing="7">
+          <TextBlock Text="{Binding Text.NoChanges}" Classes="muted" />
+          <TextBlock Text="{Binding Text.SnapshotCompareHint}" Classes="muted" FontSize="12" />
+        </StackPanel>
+      </Grid>
+      </ScrollViewer>
+    </Border>
+  </Grid>
+  </ScrollViewer>
+</UserControl>

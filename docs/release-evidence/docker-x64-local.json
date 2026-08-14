@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "product": "OeXYZ SocketScope",
+  "status": "pass",
+  "scope": "Disposable Docker Desktop Linux x64 namespace and Windows host-forwarding check",
+  "finishedUtc": "2026-08-14T08:35:30.2316883+00:00",
+  "image": "node@sha256:0557ac14e0d45d02ed563067b82856ca5e7aa3437fa28d98d4350ea9c3d9494a",
+  "applications": {
+    "linuxX64Sha256": "aa915206b155317d36f34f4d074ea205035fc34dd9877e87428ac5cc5833bf4b",
+    "windowsX64Sha256": "dbe71227d20341e8df9e846d77ccc6471dbe64f20d58f5db0726ad14e8b6f994"
+  },
+  "assertions": {
+    "controlledTcpListener": 38123,
+    "insideProvider": "linux.sock-diag",
+    "insideContainerAttribution": "available (Docker cgroup evidence)",
+    "hostForwardingRows": 1,
+    "hostContainerAttribution": "partial proxy evidence; no concrete container claimed"
+  },
+  "limitations": [
+    "This validates one disposable Docker Desktop Linux container on the local x64 host.",
+    "It does not prove attribution for every engine, namespace mode, or rootless configuration.",
+    "The randomly assigned host port and transient container identifier are intentionally omitted."
+  ]
+}

@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
+  NUGET_XMLDOC_MODE: skip
+
+jobs:
+  test:
+    name: ${{ matrix.os }} locked build and test
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-2025
+          - ubuntu-24.04
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up pinned .NET SDK
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+
+      - name: Restore locked dependencies and audit
+        run: dotnet restore OeXYZ.SocketScope.slnx --locked-mode /p:NuGetAudit=true /p:NuGetAuditMode=all
+
+      - name: Build with warnings as errors
+        run: dotnet build OeXYZ.SocketScope.slnx --configuration Release --no-restore
+
+      - name: Verify formatting
+        run: dotnet format OeXYZ.SocketScope.slnx --no-restore --verify-no-changes
+
+      - name: Run all tests
+        run: dotnet test OeXYZ.SocketScope.slnx --configuration Release --no-restore --no-build --logger "trx;LogFilePrefix=${{ runner.os }}" --results-directory TestResults
+
+      - name: Upload machine-readable test evidence
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: test-results-${{ runner.os }}
+          path: TestResults/*.trx
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,78 @@
+<UserControl
+    x:Class="OeXYZ.SocketScope.Desktop.Views.ReportsView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:OeXYZ.SocketScope.Desktop.ViewModels"
+    x:DataType="vm:MainWindowViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+    <Grid x:Name="LayoutRoot" Margin="24" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="18" MaxWidth="1440" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+      <StackPanel Grid.Row="0">
+        <TextBlock Text="{Binding Text.ReportsTitle}" Classes="title" />
+        <TextBlock Text="{Binding Text.ReportsHint}" Classes="muted" TextWrapping="Wrap" />
+      </StackPanel>
+
+      <Border Grid.Row="1" Classes="card" VerticalAlignment="Top">
+        <StackPanel Spacing="10" VerticalAlignment="Top">
+          <TextBlock Text="{Binding Text.ReportPreview}" Classes="section-title" />
+          <TextBlock Text="{Binding Text.ReportPreviewDescription}" Classes="muted" TextWrapping="Wrap" />
+          <TextBlock Text="{Binding ReportPreviewSummary}" TextWrapping="Wrap" />
+          <TextBlock Text="{Binding ReportPreviewFields}" Classes="muted" FontSize="12" TextWrapping="Wrap" />
+          <TextBlock Text="{Binding DefaultReportProfileLabel}" Classes="eyebrow" Margin="0,4,0,0" />
+          <StackPanel x:Name="DefaultExportButtons" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Left">
+            <Button Classes="primary" Command="{Binding ExportDefaultHtmlCommand}">
+              <TextBlock Text="{Binding Text.ExportDefaultHtml}" />
+            </Button>
+            <Button Command="{Binding ExportDefaultJsonCommand}">
+              <TextBlock Text="{Binding Text.ExportDefaultJson}" />
+            </Button>
+          </StackPanel>
+        </StackPanel>
+      </Border>
+
+      <Grid x:Name="ReportChoicesGrid" Grid.Row="2" ColumnDefinitions="*,*" RowDefinitions="Auto" ColumnSpacing="18" RowSpacing="14">
+        <Border x:Name="FullReportCard" Grid.Column="0" Classes="card">
+          <StackPanel Spacing="14">
+            <TextBlock Text="{Binding Text.FullReport}" Classes="section-title" />
+            <TextBlock Text="{Binding Text.FullReportDescription}" TextWrapping="Wrap" />
+            <Border Classes="notice" BorderBrush="#795E22" Background="#211C10">
+              <TextBlock Text="{Binding Text.FullReportWarning}" Foreground="{StaticResource WarningBrush}" TextWrapping="Wrap" />
+            </Border>
+            <StackPanel x:Name="FullExportButtons" Orientation="Horizontal" Spacing="10">
+              <Button Classes="primary" Command="{Binding ExportFullHtmlCommand}">
+                <TextBlock Text="{Binding Text.ExportFullHtml}" />
+              </Button>
+              <Button Command="{Binding ExportFullJsonCommand}">
+                <TextBlock Text="{Binding Text.ExportFullJson}" />
+              </Button>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+
+        <Border x:Name="ShareSafeReportCard" Grid.Column="1" Classes="card">
+          <StackPanel Spacing="14">
+            <TextBlock Text="{Binding Text.ShareSafeReport}" Classes="section-title" />
+            <TextBlock Text="{Binding Text.ShareSafeDescription}" TextWrapping="Wrap" />
+            <Border Classes="notice">
+              <TextBlock Text="{Binding Text.ShareSafeLimit}" Foreground="{StaticResource AccentHoverBrush}" TextWrapping="Wrap" />
+            </Border>
+            <StackPanel x:Name="ShareSafeExportButtons" Orientation="Horizontal" Spacing="10">
+              <Button Classes="primary" Command="{Binding ExportShareSafeHtmlCommand}">
+                <TextBlock Text="{Binding Text.ExportShareSafeHtml}" />
+              </Button>
+              <Button Command="{Binding ExportShareSafeJsonCommand}">
+                <TextBlock Text="{Binding Text.ExportShareSafeJson}" />
+              </Button>
+            </StackPanel>
+          </StackPanel>
+        </Border>
+      </Grid>
+
+      <Border Grid.Row="3" Classes="card">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+          <TextBlock Text="{Binding Text.ExternalNotVerified}" Classes="eyebrow" Foreground="{StaticResource WarningBrush}" VerticalAlignment="Center" />
+          <TextBlock Grid.Column="1" Text="{Binding ActionStatus}" Classes="muted" TextWrapping="Wrap" VerticalAlignment="Center" />
+        </Grid>
+      </Border>
+    </Grid>
+  </ScrollViewer>
+</UserControl>

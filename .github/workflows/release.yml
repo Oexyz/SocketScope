@@ -1,0 +1,191 @@
+name: Release candidate
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
+  NUGET_XMLDOC_MODE: skip
+
+jobs:
+  validate:
+    name: Validate ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-2025
+          - ubuntu-24.04
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up pinned .NET SDK
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+
+      - name: Validate strict release tag
+        shell: pwsh
+        run: |
+          if ('${{ github.ref_name }}' -notmatch '^v\d+\.\d+\.\d+$') {
+            throw 'Release tag must be strict vMAJOR.MINOR.PATCH.'
+          }
+
+      - name: Restore locked dependencies and audit
+        run: dotnet restore OeXYZ.SocketScope.slnx --locked-mode /p:NuGetAudit=true /p:NuGetAuditMode=all
+
+      - name: Build
+        run: dotnet build OeXYZ.SocketScope.slnx --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test OeXYZ.SocketScope.slnx --configuration Release --no-restore --no-build
+
+  package:
+    name: Package ${{ matrix.rid }}
+    needs: validate
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - rid: win-x64
+            os: windows-2025
+          - rid: win-arm64
+            os: windows-2025
+          - rid: linux-x64
+            os: ubuntu-24.04
+          - rid: linux-arm64
+            os: ubuntu-24.04
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up pinned .NET SDK
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+
+      - name: Build deterministic self-contained package
+        shell: pwsh
+        run: |
+          $version = '${{ github.ref_name }}'.Substring(1)
+          ./eng/New-ReleasePackage.ps1 `
+            -Version $version `
+            -RuntimeIdentifier '${{ matrix.rid }}' `
+            -RequireClean
+
+      - name: Verify package contents and runnable host artifact
+        shell: pwsh
+        run: |
+          $version = '${{ github.ref_name }}'.Substring(1)
+          $extension = if ('${{ matrix.rid }}'.StartsWith('win-')) { 'exe' } else { 'tar.gz' }
+          ./eng/Test-Release.ps1 `
+            -Package "artifacts/release/OeXYZ-SocketScope-v$version-${{ matrix.rid }}.$extension"
+
+      - name: Generate SPDX JSON SBOM
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          path: artifacts/package-root/${{ matrix.rid }}
+          format: spdx-json
+          syft-version: v1.50.0
+          output-file: artifacts/release/OeXYZ-SocketScope-${{ github.ref_name }}-${{ matrix.rid }}.spdx.json
+          upload-artifact: false
+          dependency-snapshot: false
+
+      - name: Upload package and SBOM
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: release-${{ matrix.rid }}
+          path: |
+            artifacts/release/OeXYZ-SocketScope-${{ github.ref_name }}-${{ matrix.rid }}.*
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
+
+  draft-release:
+    name: Attest and create protected draft
+    needs: package
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    environment: release
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+      artifact-metadata: write
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Download final packages and SBOMs
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          pattern: release-*
+          path: artifacts/release
+          merge-multiple: true
+
+      - name: Create final checksum manifest
+        shell: pwsh
+        run: ./eng/New-Sha256Sums.ps1 -ReleaseDirectory artifacts/release
+
+      - name: Attest final applications, SBOMs, and checksums
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
+        with:
+          subject-path: |
+            artifacts/release/*.exe
+            artifacts/release/*.tar.gz
+            artifacts/release/*.spdx.json
+            artifacts/release/SHA256SUMS
+
+      - name: Generate factual release notes
+        shell: pwsh
+        run: |
+          ./eng/New-ReleaseNotes.ps1 `
+            -Version '${{ github.ref_name }}'.Substring(1) `
+            -OutputPath artifacts/release/RELEASE-NOTES.md `
+            -OfficialTaggedSource
+
+      - name: Create draft GitHub release with all assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "${{ github.ref_name }}"
+          artifacts/release/*.exe
+          artifacts/release/*.tar.gz
+          artifacts/release/*.spdx.json
+          artifacts/release/SHA256SUMS
+          --repo "${{ github.repository }}"
+          --verify-tag
+          --draft
+          --title "OeXYZ SocketScope ${{ github.ref_name }}"
+          --notes-file artifacts/release/RELEASE-NOTES.md
+
+      - name: Publication boundary
+        run: |
+          echo "A draft was created. It must remain unpublished until the repository owner"
+          echo "verifies release immutability, native architecture evidence, screenshots,"
+          echo "checksums, SBOMs, attestations, and explicitly approves publication."

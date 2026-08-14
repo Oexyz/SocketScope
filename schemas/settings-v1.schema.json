@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:oexyz:socketscope:settings:1",
+  "title": "OeXYZ SocketScope settings version 1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "schemaVersion", "refreshIntervalMilliseconds", "automaticUpdateChecks"],
+  "properties": {
+    "schema": { "const": "urn:oexyz:socketscope:settings:1" },
+    "schemaVersion": { "const": 1 },
+    "language": { "enum": ["de", "en"] },
+    "refreshIntervalMilliseconds": { "type": "integer", "minimum": 500, "maximum": 60000 },
+    "automaticUpdateChecks": { "type": "boolean", "default": false }
+  }
+}

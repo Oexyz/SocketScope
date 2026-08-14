@@ -1,0 +1,42 @@
+name: Feature request
+description: Propose a focused, evidence-based improvement.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        SocketScope prioritizes reliable read-only diagnostics over feature count.
+        Actions that terminate processes, change services/firewalls, or require
+        privileges need a separate threat-model and confirmation design.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: Describe the diagnostic question that cannot be answered today.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: State observable behavior without prescribing an implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: platforms
+    attributes:
+      label: Platform differences
+      description: Explain known Windows/Linux differences or write "unknown".
+    validations:
+      required: true
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Security and privacy boundaries
+      options:
+        - label: The proposal does not require telemetry, an account, or a cloud dependency.
+          required: true
+        - label: I identified whether this needs elevation, network access, or system mutation.
+          required: true

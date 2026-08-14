@@ -1,0 +1,165 @@
+<UserControl
+    x:Class="OeXYZ.SocketScope.Desktop.Views.InventoryView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:OeXYZ.SocketScope.Desktop.ViewModels"
+    x:DataType="vm:MainWindowViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+  <Grid x:Name="LayoutRoot" Margin="24" MaxWidth="1440" HorizontalAlignment="Stretch" RowDefinitions="Auto,Auto,Auto" RowSpacing="16">
+    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="16">
+      <StackPanel>
+        <TextBlock Text="{Binding InventoryTitle}" Classes="title" />
+        <TextBlock Text="{Binding InventoryDescription}" Classes="muted" TextWrapping="Wrap" />
+      </StackPanel>
+      <Border Grid.Column="1" Classes="status-pill" VerticalAlignment="Center">
+        <TextBlock Text="{Binding Text.ExternalNotVerified}" Classes="eyebrow" Foreground="{StaticResource WarningBrush}" />
+      </Border>
+    </Grid>
+
+    <Grid x:Name="FilterGrid" Grid.Row="1" ColumnDefinitions="*,145,160,175,155,42" RowDefinitions="Auto" ColumnSpacing="8" RowSpacing="8">
+      <TextBox x:Name="InventorySearch" Grid.Column="0" Text="{Binding SearchText, Mode=TwoWay}" PlaceholderText="{Binding Text.SearchPlaceholder}" />
+      <ComboBox x:Name="ProtocolFilter" Grid.Column="1" ItemsSource="{Binding ProtocolFilterOptions}" SelectedItem="{Binding SelectedProtocolFilter, Mode=TwoWay}" HorizontalAlignment="Stretch" AutomationProperties.Name="{Binding Text.Protocol}">
+        <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:FilterOption"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+        <ComboBox.SelectionBoxItemTemplate><DataTemplate x:DataType="vm:FilterOption"><TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" /></DataTemplate></ComboBox.SelectionBoxItemTemplate>
+      </ComboBox>
+      <ComboBox x:Name="StateFilter" Grid.Column="2" ItemsSource="{Binding StateFilterOptions}" SelectedItem="{Binding SelectedStateFilter, Mode=TwoWay}" HorizontalAlignment="Stretch" AutomationProperties.Name="{Binding Text.State}">
+        <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:FilterOption"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+        <ComboBox.SelectionBoxItemTemplate><DataTemplate x:DataType="vm:FilterOption"><TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" /></DataTemplate></ComboBox.SelectionBoxItemTemplate>
+      </ComboBox>
+      <ComboBox x:Name="ScopeFilter" Grid.Column="3" ItemsSource="{Binding ScopeFilterOptions}" SelectedItem="{Binding SelectedScopeFilter, Mode=TwoWay}" HorizontalAlignment="Stretch" ToolTip.Tip="{Binding Text.ScopeHelp}" AutomationProperties.Name="{Binding Text.Scope}">
+        <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:FilterOption"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+        <ComboBox.SelectionBoxItemTemplate><DataTemplate x:DataType="vm:FilterOption"><TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" /></DataTemplate></ComboBox.SelectionBoxItemTemplate>
+      </ComboBox>
+      <ComboBox x:Name="SortFilter" Grid.Column="4" ItemsSource="{Binding SortFilterOptions}" SelectedItem="{Binding SelectedSortFilter, Mode=TwoWay}" HorizontalAlignment="Stretch" ToolTip.Tip="{Binding Text.SortBy}" AutomationProperties.Name="{Binding Text.SortBy}">
+        <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:FilterOption"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+        <ComboBox.SelectionBoxItemTemplate><DataTemplate x:DataType="vm:FilterOption"><TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" /></DataTemplate></ComboBox.SelectionBoxItemTemplate>
+      </ComboBox>
+      <Button x:Name="SortDirectionButton" Grid.Column="5" Command="{Binding ToggleSortDirectionCommand}" Padding="8" ToolTip.Tip="{Binding SortDirectionLabel}" AutomationProperties.Name="{Binding SortDirectionLabel}">
+        <TextBlock Text="{Binding SortDirectionGlyph}" FontSize="18" HorizontalAlignment="Center" />
+      </Button>
+    </Grid>
+
+    <Grid Grid.Row="2" RowDefinitions="Auto,*,Auto" RowSpacing="12" MinHeight="360">
+      <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="12">
+        <TextBlock Text="{Binding Text.CopySelectionHint}" Classes="muted" TextWrapping="Wrap" VerticalAlignment="Center" />
+        <Button x:Name="ResetInventoryColumnsButton" Grid.Column="1" MinHeight="30" Padding="10,4">
+          <TextBlock Text="{Binding Text.ResetColumns}" />
+        </Button>
+      </Grid>
+
+      <Border Grid.Row="1" Classes="card" Padding="0" MinHeight="240">
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+        <Grid x:Name="InventoryTableContent" MinWidth="960" MinHeight="240" RowDefinitions="*">
+          <DataGrid
+              x:Name="InventoryDataGrid"
+              Grid.Row="0"
+              ItemsSource="{Binding VisibleRows}"
+              SelectedItem="{Binding SelectedObservation, Mode=TwoWay}"
+              IsReadOnly="True"
+              AutoGenerateColumns="False"
+              HeadersVisibility="Column"
+              CanUserReorderColumns="True"
+              CanUserResizeColumns="True"
+              CanUserSortColumns="False"
+              SelectionMode="Extended"
+              ClipboardCopyMode="IncludeHeader"
+              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <DataGrid.Columns>
+              <DataGridTemplateColumn Header="Protocol" Width="105" MinWidth="90" ClipboardContentBinding="{Binding Protocol}">
+                <DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ObservationRowViewModel"><StackPanel Orientation="Horizontal" Spacing="5" Margin="7"><Ellipse Width="6" Height="6" Fill="{StaticResource SuccessBrush}" IsVisible="{Binding IsNew}" VerticalAlignment="Center" /><TextBlock Text="{Binding Protocol}" FontWeight="SemiBold" /></StackPanel></DataTemplate></DataGridTemplateColumn.CellTemplate>
+              </DataGridTemplateColumn>
+              <DataGridTemplateColumn Header="Local" Width="175" MinWidth="100" ClipboardContentBinding="{Binding LocalEndpoint}"><DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ObservationRowViewModel"><TextBlock Text="{Binding LocalEndpoint}" Margin="7" TextTrimming="CharacterEllipsis" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+              <DataGridTemplateColumn Header="Remote" Width="175" MinWidth="100" ClipboardContentBinding="{Binding RemoteEndpoint}"><DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ObservationRowViewModel"><TextBlock Text="{Binding RemoteEndpoint}" Margin="7" Classes="muted" TextTrimming="CharacterEllipsis" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+              <DataGridTemplateColumn Header="State" Width="125" MinWidth="80" ClipboardContentBinding="{Binding State}"><DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ObservationRowViewModel"><TextBlock Text="{Binding State}" Margin="7" TextTrimming="CharacterEllipsis" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+              <DataGridTemplateColumn Header="Process" Width="170" MinWidth="100" ClipboardContentBinding="{Binding ProcessName}"><DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ObservationRowViewModel"><TextBlock Text="{Binding ProcessName}" Margin="7" TextTrimming="CharacterEllipsis" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+              <DataGridTemplateColumn Header="PID" Width="105" MinWidth="75" ClipboardContentBinding="{Binding ProcessId}"><DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ObservationRowViewModel"><TextBlock Text="{Binding ProcessId}" Margin="7" Classes="muted" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+              <DataGridTemplateColumn Header="Scope" Width="*" MinWidth="120" ClipboardContentBinding="{Binding Scope}"><DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ObservationRowViewModel"><TextBlock Text="{Binding Scope}" Margin="7" TextTrimming="CharacterEllipsis" /></DataTemplate></DataGridTemplateColumn.CellTemplate></DataGridTemplateColumn>
+            </DataGrid.Columns>
+          </DataGrid>
+          <TextBlock Grid.Row="0" Text="{Binding Text.NoResults}" Classes="muted" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding !HasRows}" IsHitTestVisible="False" />
+        </Grid>
+        </ScrollViewer>
+      </Border>
+
+      <Border Grid.Row="2" Classes="card" MinHeight="82" MaxHeight="460">
+        <Grid>
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="{Binding !HasSelection}" Spacing="12">
+            <Border Width="34" Height="34" CornerRadius="17" Background="{StaticResource SurfaceTintBrush}" BorderBrush="{StaticResource BorderStrongBrush}" BorderThickness="1"><TextBlock Text="i" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource AccentHoverBrush}" /></Border>
+            <StackPanel><TextBlock Text="{Binding Text.Details}" FontWeight="SemiBold" /><TextBlock Text="{Binding Text.SelectEndpoint}" Classes="muted" TextWrapping="Wrap" /></StackPanel>
+          </StackPanel>
+
+          <ScrollViewer IsVisible="{Binding HasSelection}" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="14">
+              <WrapPanel Orientation="Horizontal">
+                <Button x:Name="CopyLocalEndpointButton" Margin="0,0,8,8" Command="{Binding CopyLocalEndpointCommand}"><TextBlock Text="{Binding Text.CopyLocalEndpoint}" /></Button>
+                <Button x:Name="CopyRemoteEndpointButton" Margin="0,0,8,8" Command="{Binding CopyRemoteEndpointCommand}"><TextBlock Text="{Binding Text.CopyRemoteEndpoint}" /></Button>
+                <Button x:Name="CopyExecutablePathButton" Margin="0,0,8,8" Command="{Binding CopyExecutablePathCommand}"><TextBlock Text="{Binding Text.CopyExecutablePath}" /></Button>
+                <Button x:Name="CopyDetailsButton" Margin="0,0,8,8" Command="{Binding CopyDetailsCommand}"><TextBlock Text="{Binding Text.CopyDetails}" /></Button>
+                <Button x:Name="CopyShareSafeSummaryButton" Margin="0,0,8,8" Classes="primary" Command="{Binding CopyShareSafeSummaryCommand}"><TextBlock Text="{Binding Text.CopyShareSafeSummary}" /></Button>
+              </WrapPanel>
+              <TextBlock Text="{Binding ActionStatus}" Classes="muted" TextWrapping="Wrap" />
+              <Grid x:Name="DetailsGrid" ColumnDefinitions="210,*,*" RowDefinitions="Auto" ColumnSpacing="18" RowSpacing="16">
+              <StackPanel x:Name="EndpointDetailsPanel" Grid.Column="0" Spacing="7">
+                <TextBlock Text="{Binding Text.Details}" Classes="eyebrow" />
+                <TextBlock Text="{Binding SelectedObservation.ProcessName}" Classes="section-title" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding SelectedObservation.LocalEndpoint}" Foreground="{StaticResource AccentHoverBrush}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding SelectedObservation.RemoteEndpoint}" Classes="muted" TextWrapping="Wrap" />
+                <Border Classes="notice" Padding="9,7"><StackPanel><TextBlock Text="{Binding Text.ExternalReachability}" Classes="eyebrow" /><TextBlock Text="{Binding Text.NotTested}" Foreground="{StaticResource WarningBrush}" FontWeight="SemiBold" /></StackPanel></Border>
+              </StackPanel>
+              <StackPanel x:Name="ProcessDetailsPanel" Grid.Column="1" Spacing="7">
+                <TextBlock Text="{Binding Text.Process}" Classes="eyebrow" />
+                <TextBlock Text="{Binding SelectedObservation.ExecutablePath}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding SelectedObservation.ProcessAvailability}" Classes="muted" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Text.Services}" Classes="eyebrow" Margin="0,5,0,0" />
+                <TextBlock Text="{Binding SelectedObservation.Services}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding SelectedObservation.ServiceAvailability}" Classes="muted" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Text.Container}" Classes="eyebrow" Margin="0,5,0,0" />
+                <TextBlock Text="{Binding SelectedObservation.Container}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding SelectedObservation.ContainerAvailability}" Classes="muted" TextWrapping="Wrap" />
+              </StackPanel>
+              <StackPanel x:Name="BindingDetailsPanel" Grid.Column="2" Spacing="7">
+                <TextBlock Text="{Binding Text.Binding}" Classes="eyebrow" />
+                <TextBlock Text="{Binding SelectedObservation.Scope}" FontWeight="SemiBold" ToolTip.Tip="{Binding Text.ScopeHelp}" />
+                <TextBlock Text="{Binding SelectedObservation.ScopeExplanation}" Classes="muted" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding SelectedObservation.InterfaceContexts}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding SelectedObservation.BindingEvidence}" Classes="muted" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Text.Firewall}" Classes="eyebrow" Margin="0,5,0,0" />
+                <TextBlock Text="{Binding SelectedObservation.Firewall}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding SelectedObservation.FirewallEvidence}" Classes="muted" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Text.FirewallCandidateHelp}" Classes="muted" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding Text.FirewallCandidates}" Classes="eyebrow" Margin="0,5,0,0" />
+                <TextBlock Text="{Binding Text.NoFirewallCandidates}" Classes="muted" TextWrapping="Wrap" IsVisible="{Binding !SelectedObservation.HasFirewallCandidates}" />
+                <ItemsControl ItemsSource="{Binding SelectedObservation.FirewallCandidates}" IsVisible="{Binding SelectedObservation.HasFirewallCandidates}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:FirewallRuleRowViewModel">
+                      <Border Classes="notice" Padding="9" Margin="0,0,0,6">
+                        <StackPanel Spacing="3">
+                          <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                            <TextBlock Grid.Column="1" Text="{Binding Action}" Foreground="{StaticResource AccentHoverBrush}" />
+                          </Grid>
+                          <TextBlock Text="{Binding Direction}" Classes="muted" />
+                          <TextBlock Text="{Binding ProtocolAndPorts}" TextWrapping="Wrap" />
+                          <TextBlock Text="{Binding Addresses}" TextWrapping="Wrap" />
+                          <TextBlock Text="{Binding ProfilesOrZones}" Classes="muted" TextWrapping="Wrap" />
+                          <TextBlock Text="{Binding MatchReason}" Classes="muted" TextWrapping="Wrap" />
+                          <TextBlock Text="{Binding UnsupportedConditions}" Foreground="{StaticResource WarningBrush}" TextWrapping="Wrap" IsVisible="{Binding HasUnsupportedConditions}" />
+                        </StackPanel>
+                      </Border>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <TextBlock Text="{Binding Text.FirstSeen}" Classes="eyebrow" Margin="0,5,0,0" />
+                <TextBlock Text="{Binding SelectedObservation.FirstSeen}" />
+                <TextBlock Text="{Binding Text.OperatingSystemCreated}" Classes="eyebrow" Margin="0,5,0,0" />
+                <TextBlock Text="{Binding SelectedObservation.OperatingSystemCreated}" />
+              </StackPanel>
+              </Grid>
+            </StackPanel>
+          </ScrollViewer>
+        </Grid>
+      </Border>
+    </Grid>
+  </Grid>
+  </ScrollViewer>
+</UserControl>

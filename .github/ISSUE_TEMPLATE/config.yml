@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/Oexyz/SocketScope/security/policy
+    about: Follow the private disclosure instructions; do not file a public issue.
+  - name: Support and privacy guidance
+    url: https://github.com/Oexyz/SocketScope/blob/main/docs/SECURITY-AND-PRIVACY.md
+    about: Review what a report or screenshot may contain before sharing it.

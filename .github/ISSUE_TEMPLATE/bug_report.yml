@@ -1,0 +1,78 @@
+name: Bug report
+description: Report a reproducible SocketScope defect using sanitized evidence.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve SocketScope. Do not attach raw socket tables,
+        unsanitized reports, credentials, customer data, full user paths, or unrelated
+        screenshots. Report security vulnerabilities privately through SECURITY.md.
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: I reviewed all pasted text and attachments for sensitive data.
+          required: true
+        - label: This is not a security vulnerability requiring private disclosure.
+          required: true
+  - type: input
+    id: version
+    attributes:
+      label: SocketScope version
+      description: Release tag or source commit; write "local build" when applicable.
+      placeholder: v1.0.0
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Windows x64
+        - Windows ARM64
+        - Linux x64
+        - Linux ARM64
+        - Unsupported platform
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system details
+      description: Windows build or Linux distribution/kernel and desktop session.
+      placeholder: Windows 11 24H2 x64
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: What happened?
+      description: Include the exact visible diagnostic code, not sensitive raw data.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Prefer controlled loopback/test endpoints and ordinary-user steps.
+      placeholder: |
+        1. Start a TCP listener on 127.0.0.1 using the test fixture.
+        2. Open Listeners.
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Sanitized diagnostics
+      description: Optional. Use a standard-redacted report and re-check it before attaching.

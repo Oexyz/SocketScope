@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <AssemblyName>socketscope</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../OeXYZ.SocketScope.Core/OeXYZ.SocketScope.Core.csproj" />
+    <ProjectReference Include="../OeXYZ.SocketScope.Platform.Linux/OeXYZ.SocketScope.Platform.Linux.csproj" />
+    <ProjectReference Include="../OeXYZ.SocketScope.Platform.Windows/OeXYZ.SocketScope.Platform.Windows.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+  </ItemGroup>
+</Project>

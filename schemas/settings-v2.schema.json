@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:oexyz:socketscope:settings:2",
+  "title": "OeXYZ SocketScope settings version 2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schemaVersion",
+    "refreshIntervalMilliseconds",
+    "automaticUpdateChecks",
+    "defaultExportProfile",
+    "shareSafeRedaction",
+    "customSensitiveValues"
+  ],
+  "properties": {
+    "schema": { "const": "urn:oexyz:socketscope:settings:2" },
+    "schemaVersion": { "const": 2 },
+    "language": { "enum": ["de", "en"] },
+    "refreshIntervalMilliseconds": { "type": "integer", "minimum": 500, "maximum": 60000 },
+    "automaticUpdateChecks": { "type": "boolean", "default": false },
+    "defaultExportProfile": { "enum": ["full", "shareSafe"], "default": "shareSafe" },
+    "shareSafeRedaction": { "$ref": "#/$defs/redactionOptions" },
+    "customSensitiveValues": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 3, "maxLength": 128, "pattern": "^[^\\u0000-\\u001F\\u007F-\\u009F]+$" }
+    }
+  },
+  "$defs": {
+    "redactionOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reducePrivateIpAddresses",
+        "reducePublicIpAddresses",
+        "reduceUserNamesInPaths",
+        "reduceProcessIds",
+        "reduceProcessNames",
+        "reduceServiceNames",
+        "reduceContainerIdentifiers",
+        "reduceFirewallRuleNames"
+      ],
+      "properties": {
+        "reducePrivateIpAddresses": { "type": "boolean", "default": true },
+        "reducePublicIpAddresses": { "type": "boolean", "default": true },
+        "reduceUserNamesInPaths": { "type": "boolean", "default": true },
+        "reduceProcessIds": { "type": "boolean", "default": true },
+        "reduceProcessNames": { "type": "boolean", "default": false },
+        "reduceServiceNames": { "type": "boolean", "default": false },
+        "reduceContainerIdentifiers": { "type": "boolean", "default": true },
+        "reduceFirewallRuleNames": { "type": "boolean", "default": true }
+      }
+    }
+  }
+}

@@ -1,0 +1,114 @@
+<UserControl
+    x:Class="OeXYZ.SocketScope.Desktop.Views.OverviewView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:OeXYZ.SocketScope.Desktop.ViewModels"
+    x:DataType="vm:MainWindowViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+  <Grid x:Name="LayoutRoot" Margin="24" MaxWidth="1440" HorizontalAlignment="Stretch" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="18">
+    <Border Grid.Row="0" Classes="notice">
+      <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+        <Border Width="26" Height="26" CornerRadius="13" Background="#183C5D" VerticalAlignment="Top">
+          <TextBlock Text="i" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="{StaticResource AccentHoverBrush}" />
+        </Border>
+        <StackPanel Grid.Column="1" Spacing="2">
+          <TextBlock Text="{Binding Text.BindingNoticeTitle}" FontWeight="SemiBold" />
+          <TextBlock Text="{Binding Text.BindingNoticeBody}" Classes="muted" TextWrapping="Wrap" />
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <StackPanel Grid.Row="1">
+      <TextBlock Text="{Binding Text.Overview}" Classes="title" />
+      <TextBlock Text="{Binding Text.Tagline}" Classes="muted" />
+    </StackPanel>
+
+    <Grid x:Name="SummaryGrid" Grid.Row="2" ColumnDefinitions="*,*,*,*,*" RowDefinitions="Auto" ColumnSpacing="10" RowSpacing="10">
+      <Border x:Name="ActiveConnectionsCard" Grid.Column="0" Classes="card">
+        <StackPanel Spacing="8">
+          <TextBlock Text="{Binding Text.ActiveConnections}" Classes="muted" TextWrapping="Wrap" MaxWidth="155" HorizontalAlignment="Left" />
+          <TextBlock Text="{Binding ActiveConnections}" FontSize="30" FontWeight="SemiBold" />
+        </StackPanel>
+      </Border>
+      <Border x:Name="LocalListenersCard" Grid.Column="1" Classes="card">
+        <StackPanel Spacing="8">
+          <TextBlock Text="{Binding Text.LocalListeners}" Classes="muted" TextWrapping="Wrap" MaxWidth="155" HorizontalAlignment="Left" />
+          <TextBlock Text="{Binding ListenerCount}" FontSize="30" FontWeight="SemiBold" />
+        </StackPanel>
+      </Border>
+      <Border x:Name="LanListenersCard" Grid.Column="2" Classes="card">
+        <StackPanel Spacing="8">
+          <TextBlock Text="{Binding Text.LanListeners}" Classes="muted" TextWrapping="Wrap" MaxWidth="155" HorizontalAlignment="Left" />
+          <TextBlock Text="{Binding LanListenerCount}" FontSize="30" FontWeight="SemiBold" Foreground="{StaticResource WarningBrush}" />
+        </StackPanel>
+      </Border>
+      <Border x:Name="WildcardListenersCard" Grid.Column="3" Classes="card">
+        <StackPanel Spacing="8">
+          <TextBlock Text="{Binding Text.WildcardListeners}" Classes="muted" TextWrapping="Wrap" MaxWidth="155" HorizontalAlignment="Left" />
+          <TextBlock Text="{Binding WildcardListenerCount}" FontSize="30" FontWeight="SemiBold" Foreground="{StaticResource AccentHoverBrush}" />
+        </StackPanel>
+      </Border>
+      <Border x:Name="NewObservationsCard" Grid.Column="4" Classes="card">
+        <StackPanel Spacing="8">
+          <TextBlock Text="{Binding Text.NewObservations}" Classes="muted" TextWrapping="Wrap" MaxWidth="155" HorizontalAlignment="Left" />
+          <TextBlock Text="{Binding NewObservationCount}" FontSize="30" FontWeight="SemiBold" Foreground="{StaticResource SuccessBrush}" />
+          <TextBlock Text="{Binding SnapshotBaselineStatus}" Classes="muted" FontSize="11" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+    </Grid>
+
+    <Border Grid.Row="3" Classes="card" Padding="0" MinHeight="300">
+      <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+      <Grid x:Name="OverviewTableContent" MinWidth="980" MinHeight="300" RowDefinitions="Auto,*">
+        <Grid Margin="18,14" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+          <TextBlock Text="{Binding Text.EndpointOverview}" Classes="section-title" />
+          <Button Grid.Column="1" Classes="nav" Command="{Binding NavigateCommand}" CommandParameter="Listeners" MinHeight="30" Padding="10,4">
+            <TextBlock Text="{Binding Text.Listeners}" Foreground="{StaticResource AccentHoverBrush}" />
+          </Button>
+          <Button x:Name="ResetOverviewColumnsButton" Grid.Column="2" MinHeight="30" Padding="10,4" ToolTip.Tip="{Binding Text.CopySelectionHint}">
+            <TextBlock Text="{Binding Text.ResetColumns}" />
+          </Button>
+        </Grid>
+        <DataGrid
+            x:Name="OverviewDataGrid"
+            Grid.Row="1"
+            ItemsSource="{Binding OverviewRows}"
+            IsReadOnly="True"
+            AutoGenerateColumns="False"
+            HeadersVisibility="Column"
+            CanUserReorderColumns="True"
+            CanUserResizeColumns="True"
+            CanUserSortColumns="False"
+            SelectionMode="Extended"
+            ClipboardCopyMode="IncludeHeader"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+          <DataGrid.Columns>
+            <DataGridTemplateColumn Header="Protocol" Width="105" MinWidth="90" ClipboardContentBinding="{Binding Protocol}">
+              <DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ObservationRowViewModel"><TextBlock Text="{Binding Protocol}" Margin="8,7" FontWeight="SemiBold" /></DataTemplate></DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn Header="Local" Width="195" MinWidth="100" ClipboardContentBinding="{Binding LocalEndpoint}">
+              <DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ObservationRowViewModel"><TextBlock Text="{Binding LocalEndpoint}" Margin="8,7" TextTrimming="CharacterEllipsis" /></DataTemplate></DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn Header="Remote" Width="195" MinWidth="100" ClipboardContentBinding="{Binding RemoteEndpoint}">
+              <DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ObservationRowViewModel"><TextBlock Text="{Binding RemoteEndpoint}" Margin="8,7" Classes="muted" TextTrimming="CharacterEllipsis" /></DataTemplate></DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn Header="State" Width="110" MinWidth="80" ClipboardContentBinding="{Binding State}">
+              <DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ObservationRowViewModel"><TextBlock Text="{Binding State}" Margin="8,7" /></DataTemplate></DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn Header="Process" Width="165" MinWidth="100" ClipboardContentBinding="{Binding ProcessName}">
+              <DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ObservationRowViewModel"><TextBlock Text="{Binding ProcessName}" Margin="8,7" TextTrimming="CharacterEllipsis" /></DataTemplate></DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn Header="PID" Width="105" MinWidth="75" ClipboardContentBinding="{Binding ProcessId}">
+              <DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ObservationRowViewModel"><TextBlock Text="{Binding ProcessId}" Margin="8,7" Classes="muted" /></DataTemplate></DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn Header="Scope" Width="*" MinWidth="120" ClipboardContentBinding="{Binding Scope}">
+              <DataGridTemplateColumn.CellTemplate><DataTemplate x:DataType="vm:ObservationRowViewModel"><TextBlock Text="{Binding Scope}" Margin="8,7" TextTrimming="CharacterEllipsis" /></DataTemplate></DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+          </DataGrid.Columns>
+        </DataGrid>
+      </Grid>
+      </ScrollViewer>
+    </Border>
+  </Grid>
+  </ScrollViewer>
+</UserControl>

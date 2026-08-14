@@ -1,0 +1,217 @@
+<UserControl
+    x:Class="OeXYZ.SocketScope.Desktop.Views.SettingsView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:OeXYZ.SocketScope.Desktop.ViewModels"
+    x:DataType="vm:MainWindowViewModel">
+  <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+    <Grid x:Name="LayoutRoot" Margin="24" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="18" MaxWidth="1200" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+      <StackPanel Grid.Row="0">
+        <TextBlock Text="{Binding Text.Settings}" Classes="title" />
+        <TextBlock Text="{Binding Text.SettingsHint}" Classes="muted" TextWrapping="Wrap" />
+      </StackPanel>
+
+      <Border Grid.Row="1" Classes="card">
+        <StackPanel Spacing="20">
+          <TextBlock Text="{Binding Text.Settings}" Classes="section-title" />
+          <Grid x:Name="SettingsForm" ColumnDefinitions="260,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="16" ColumnSpacing="18">
+            <StackPanel x:Name="LanguageLabelPanel" Grid.Row="0" Spacing="3">
+              <TextBlock Text="{Binding Text.LanguageLabel}" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding Text.LanguageHint}" Classes="muted" FontSize="12" TextWrapping="Wrap" />
+            </StackPanel>
+            <ComboBox x:Name="LanguageSelector" Grid.Row="0" Grid.Column="1" ItemsSource="{Binding LanguageOptions}" SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}" MinWidth="220" AutomationProperties.Name="{Binding Text.LanguageLabel}">
+              <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:FilterOption"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+              <ComboBox.SelectionBoxItemTemplate><DataTemplate x:DataType="vm:FilterOption"><TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" /></DataTemplate></ComboBox.SelectionBoxItemTemplate>
+            </ComboBox>
+
+            <StackPanel x:Name="RefreshLabelPanel" Grid.Row="1" Spacing="3">
+              <TextBlock Text="{Binding Text.RefreshInterval}" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding Text.RefreshRange}" Classes="muted" FontSize="12" />
+            </StackPanel>
+            <Grid x:Name="RefreshEditor" Grid.Row="1" Grid.Column="1" ColumnDefinitions="180,Auto" ColumnSpacing="10">
+              <NumericUpDown Grid.Column="0" Value="{Binding RefreshIntervalSeconds, Mode=TwoWay}" Minimum="0.5" Maximum="60" Increment="0.5" FormatString="0.0" />
+              <TextBlock Grid.Column="1" Text="{Binding Text.Seconds}" Classes="muted" VerticalAlignment="Center" />
+            </Grid>
+
+            <StackPanel x:Name="UpdateLabelPanel" Grid.Row="2" Spacing="3">
+              <TextBlock Text="{Binding Text.UpdateChecks}" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding Text.UpdateChecksOff}" Classes="muted" FontSize="12" TextWrapping="Wrap" />
+            </StackPanel>
+            <CheckBox x:Name="AutomaticUpdateCheckBox" Grid.Row="2" Grid.Column="1" IsChecked="{Binding AutomaticUpdateChecks, Mode=TwoWay}" Content="{Binding Text.UpdateChecks}" VerticalAlignment="Center" />
+          </Grid>
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+            <Button Grid.Column="0" Classes="primary" Command="{Binding SaveSettingsCommand}">
+              <TextBlock Text="{Binding Text.SaveSettings}" />
+            </Button>
+            <TextBlock Grid.Column="1" Text="{Binding ActionStatus}" Classes="muted" TextWrapping="Wrap" VerticalAlignment="Center" />
+          </Grid>
+          <Border Classes="notice">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+              <Button Grid.Column="0" Command="{Binding CheckUpdatesCommand}" IsEnabled="{Binding CanCheckUpdates}">
+                <TextBlock Text="{Binding Text.CheckNow}" />
+              </Button>
+              <StackPanel Grid.Column="1" Spacing="3" VerticalAlignment="Center">
+                <TextBlock Text="{Binding UpdateStatus}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding UpdateReleasePage}" Classes="muted" FontSize="11" TextWrapping="Wrap" IsVisible="{Binding HasUpdateAvailable}" />
+                <TextBlock Text="{Binding UpdateVerificationPreview}" FontFamily="{StaticResource SocketScopeFont}" FontSize="11" TextWrapping="Wrap" IsVisible="{Binding HasUpdateAvailable}" />
+              </StackPanel>
+            </Grid>
+          </Border>
+          <Border Classes="notice" IsVisible="{Binding HasUpdateAvailable}">
+            <StackPanel Spacing="10">
+              <TextBlock Text="{Binding Text.UpdateConfirmNotice}" TextWrapping="Wrap" />
+              <Button Classes="primary" Command="{Binding InstallUpdateCommand}" IsEnabled="{Binding CanInstallUpdate}" HorizontalAlignment="Left">
+                <TextBlock Text="{Binding Text.InstallUpdate}" />
+              </Button>
+              <TextBlock Text="{Binding Text.UpdateInstallUnavailable}" Classes="muted" FontSize="11" TextWrapping="Wrap" IsVisible="{Binding !CanSelfUpdate}" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Row="2" Classes="card" VerticalAlignment="Top">
+        <StackPanel Spacing="16" VerticalAlignment="Top">
+          <TextBlock Text="{Binding Text.ExportPreferences}" Classes="section-title" />
+          <Grid x:Name="ExportProfileGrid" ColumnDefinitions="260,*" ColumnSpacing="18" RowDefinitions="Auto" RowSpacing="8">
+            <StackPanel x:Name="ExportProfileLabelPanel" Spacing="3" VerticalAlignment="Top">
+              <TextBlock Text="{Binding Text.DefaultExportProfile}" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding Text.DefaultExportProfileHint}" Classes="muted" FontSize="12" TextWrapping="Wrap" />
+            </StackPanel>
+            <ComboBox
+                x:Name="ExportProfileSelector"
+                Grid.Column="1"
+                ItemsSource="{Binding ExportProfileOptions}"
+                SelectedItem="{Binding SelectedExportProfile, Mode=TwoWay}"
+                MaxWidth="420"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                AutomationProperties.Name="{Binding Text.DefaultExportProfile}">
+              <ComboBox.ItemTemplate><DataTemplate x:DataType="vm:FilterOption"><TextBlock Text="{Binding Label}" /></DataTemplate></ComboBox.ItemTemplate>
+              <ComboBox.SelectionBoxItemTemplate><DataTemplate x:DataType="vm:FilterOption"><TextBlock Text="{Binding Label}" TextTrimming="CharacterEllipsis" /></DataTemplate></ComboBox.SelectionBoxItemTemplate>
+            </ComboBox>
+          </Grid>
+          <StackPanel Spacing="3">
+            <TextBlock Text="{Binding Text.ShareSafeFields}" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding Text.ShareSafeFieldsHint}" Classes="muted" FontSize="12" TextWrapping="Wrap" />
+          </StackPanel>
+          <WrapPanel Orientation="Horizontal">
+            <CheckBox IsChecked="{Binding ReducePrivateIpAddresses, Mode=TwoWay}" Content="{Binding Text.ReducePrivateIps}" Margin="0,0,18,10" VerticalAlignment="Top" />
+            <CheckBox IsChecked="{Binding ReducePublicIpAddresses, Mode=TwoWay}" Content="{Binding Text.ReducePublicIps}" Margin="0,0,18,10" VerticalAlignment="Top" />
+            <CheckBox IsChecked="{Binding ReduceUserNamesInPaths, Mode=TwoWay}" Content="{Binding Text.ReduceUserPaths}" Margin="0,0,18,10" VerticalAlignment="Top" />
+            <CheckBox IsChecked="{Binding ReduceProcessIds, Mode=TwoWay}" Content="{Binding Text.ReduceProcessIds}" Margin="0,0,18,10" VerticalAlignment="Top" />
+            <CheckBox IsChecked="{Binding ReduceProcessNames, Mode=TwoWay}" Content="{Binding Text.ReduceProcessNames}" Margin="0,0,18,10" VerticalAlignment="Top" />
+            <CheckBox IsChecked="{Binding ReduceServiceNames, Mode=TwoWay}" Content="{Binding Text.ReduceServiceNames}" Margin="0,0,18,10" VerticalAlignment="Top" />
+            <CheckBox IsChecked="{Binding ReduceContainerIdentifiers, Mode=TwoWay}" Content="{Binding Text.ReduceContainerIds}" Margin="0,0,18,10" VerticalAlignment="Top" />
+            <CheckBox IsChecked="{Binding ReduceFirewallRuleNames, Mode=TwoWay}" Content="{Binding Text.ReduceFirewallNames}" Margin="0,0,18,10" VerticalAlignment="Top" />
+          </WrapPanel>
+          <StackPanel Spacing="4" VerticalAlignment="Top">
+            <TextBlock Text="{Binding Text.CustomSensitiveValues}" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding Text.CustomSensitiveValuesHint}" Classes="muted" FontSize="12" TextWrapping="Wrap" />
+            <TextBox
+                x:Name="CustomSensitiveValuesText"
+                Text="{Binding CustomSensitiveValuesText, Mode=TwoWay}"
+                AcceptsReturn="True"
+                TextWrapping="Wrap"
+                MinHeight="96"
+                MaxHeight="160"
+                VerticalContentAlignment="Top"
+                HorizontalContentAlignment="Left"
+                PlaceholderText="{Binding Text.CustomSensitiveValuesWatermark}"
+                AutomationProperties.Name="{Binding Text.CustomSensitiveValues}"
+                AutomationProperties.HelpText="{Binding Text.CustomSensitiveValuesHint}" />
+            <TextBlock
+                Text="{Binding CustomSensitiveValuesStatus}"
+                Classes="muted"
+                FontSize="12"
+                TextWrapping="Wrap"
+                IsVisible="{Binding CustomSensitiveValuesAreValid}" />
+            <TextBlock
+                Text="{Binding CustomSensitiveValuesStatus}"
+                Foreground="{StaticResource WarningBrush}"
+                FontSize="12"
+                TextWrapping="Wrap"
+                IsVisible="{Binding !CustomSensitiveValuesAreValid}" />
+          </StackPanel>
+          <Border Classes="notice">
+            <StackPanel Spacing="4" VerticalAlignment="Top">
+              <TextBlock Text="{Binding Text.ReportPreview}" Classes="eyebrow" />
+              <TextBlock Text="{Binding ReportPreviewSummary}" TextWrapping="Wrap" />
+              <TextBlock Text="{Binding ReportPreviewFields}" Classes="muted" FontSize="12" TextWrapping="Wrap" />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Row="3" Classes="card" VerticalAlignment="Top">
+        <StackPanel Spacing="12" VerticalAlignment="Top">
+          <TextBlock Text="{Binding Text.LocalStorage}" Classes="section-title" />
+          <TextBlock Text="{Binding Text.LocalStorageHint}" Classes="muted" TextWrapping="Wrap" />
+          <TextBlock Text="{Binding Text.DataLocation}" Classes="eyebrow" />
+          <TextBox
+              x:Name="DataRootPathText"
+              Text="{Binding DataRootDisplay}"
+              IsReadOnly="True"
+              FontFamily="{StaticResource SocketScopeFont}"
+              VerticalContentAlignment="Top"
+              AutomationProperties.Name="{Binding Text.DataLocation}" />
+          <TextBlock Text="{Binding LocalStorageSummary}" Classes="muted" FontSize="12" TextWrapping="Wrap" />
+        </StackPanel>
+      </Border>
+
+      <Border Grid.Row="4" Classes="card" VerticalAlignment="Top">
+        <StackPanel Spacing="14">
+          <TextBlock Text="{Binding Text.TerminalCommand}" Classes="section-title" />
+          <TextBlock Text="{Binding Text.TerminalCommandDescription}" Classes="muted" TextWrapping="Wrap" />
+          <Border Classes="notice">
+            <Grid x:Name="TerminalStatusLayout" ColumnDefinitions="*" RowDefinitions="Auto,Auto" RowSpacing="14">
+              <StackPanel x:Name="TerminalStatusPanel" Grid.Row="0" Grid.Column="0" Spacing="8">
+                <TextBlock
+                    Text="{Binding TerminalStatus}"
+                    TextWrapping="Wrap"
+                    TextAlignment="Center"
+                    HorizontalAlignment="Center"
+                    AutomationProperties.Name="{Binding Text.TerminalCommand}" />
+                <TextBlock Text="{Binding Text.TerminalInstallPath}" Classes="muted" FontSize="11" />
+                <TextBox
+                    x:Name="TerminalInstallPathText"
+                    Text="{Binding TerminalInstallPath}"
+                    IsReadOnly="True"
+                    FontFamily="{StaticResource SocketScopeFont}"
+                    AutomationProperties.Name="{Binding Text.TerminalInstallPath}" />
+              </StackPanel>
+              <StackPanel
+                  x:Name="TerminalActionButtons"
+                  Grid.Row="1"
+                  Grid.Column="0"
+                  Orientation="Horizontal"
+                  Spacing="10"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center">
+                <Button
+                    x:Name="InstallTerminalCommandButton"
+                    Classes="primary"
+                    Command="{Binding InstallTerminalCommand}"
+                    IsEnabled="{Binding CanInstallTerminalCommand}">
+                  <TextBlock Text="{Binding TerminalInstallButtonText}" />
+                </Button>
+                <Button
+                    x:Name="RefreshTerminalStatusButton"
+                    Command="{Binding RefreshTerminalStatusCommand}"
+                    IsEnabled="{Binding CanRefreshTerminalStatus}">
+                  <TextBlock Text="{Binding Text.RefreshTerminalStatus}" />
+                </Button>
+              </StackPanel>
+            </Grid>
+          </Border>
+          <TextBlock Text="{Binding Text.TerminalSecurityHint}" Classes="muted" FontSize="12" TextWrapping="Wrap" />
+          <TextBlock
+              Text="{Binding Text.TerminalInstallUnavailable}"
+              Classes="muted"
+              FontSize="11"
+              TextWrapping="Wrap"
+              IsVisible="{Binding !CanInstallTerminalFromCurrentBuild}" />
+        </StackPanel>
+      </Border>
+    </Grid>
+  </ScrollViewer>
+</UserControl>
