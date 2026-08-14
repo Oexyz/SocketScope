@@ -435,11 +435,11 @@ try {
         $desktopFileName = $application
         $desktopArguments = @()
         if ($IsLinux -and [string]::IsNullOrWhiteSpace($env:DISPLAY)) {
-            $xvfbRun = Get-Command 'xvfb-run' -CommandType Application -ErrorAction SilentlyContinue
-            if (-not $xvfbRun) {
+            $xvfbCandidates = @(Get-Command 'xvfb-run' -CommandType Application -ErrorAction SilentlyContinue)
+            if ($xvfbCandidates.Count -eq 0) {
                 throw 'The Linux desktop package smoke requires DISPLAY or the xvfb-run executable.'
             }
-            $desktopFileName = $xvfbRun.Source
+            $desktopFileName = $xvfbCandidates[0].Path
             $desktopArguments = @('-a', $application)
         }
         $startInfo = [Diagnostics.ProcessStartInfo]::new()
