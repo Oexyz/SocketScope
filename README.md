@@ -138,8 +138,9 @@ Release assets are self-contained and do not require a separate .NET installatio
 They still rely on operating-system libraries such as glibc, ICU, the desktop's
 X11/XWayland client libraries, Fontconfig, and FreeType on Linux; a normal current
 desktop installation usually provides them.
-Until an official release is published, build from source and treat local artifacts as
-development builds.
+Official builds are published on the
+[GitHub Releases page](https://github.com/Oexyz/SocketScope/releases). Treat artifacts
+built locally from an untagged or modified source tree as development builds.
 
 ### Windows single executable
 

@@ -6,6 +6,8 @@ Versioning.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-08-14
+
 ### Added
 
 - Cross-platform Core inventory pipeline with immutable evidence models.
@@ -64,12 +66,6 @@ Versioning.
   header names, allowing repeated builds of unchanged input to match byte-for-byte.
 - Generated release-evidence JSON is kept beside release assets instead of being
   recursively embedded into Linux archives that the evidence itself describes.
-
-## [1.0.0] - Unreleased
-
-The first stable release will be cut only after all release gates in
-`docs/IMPLEMENTATION-PLAN.md` and `docs/TESTING.md` have evidence. Until then, the
-repository is pre-release software.
 
 [Unreleased]: https://github.com/Oexyz/SocketScope/compare/v1.0.0...HEAD
 [1.0.0]: https://github.com/Oexyz/SocketScope/releases/tag/v1.0.0
