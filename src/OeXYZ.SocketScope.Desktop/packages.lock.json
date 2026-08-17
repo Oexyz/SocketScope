@@ -15,9 +15,9 @@
       },
       "Avalonia.Controls.DataGrid": {
         "type": "Direct",
-        "requested": "[12.1.1, )",
-        "resolved": "12.1.1",
-        "contentHash": "62SH+IgQXaK1bFL7iozXPd04Mg5nkpntlYCdXwBeCYs5rmr2OoetVyrayTNS5Kg/FhHOSkTYrGscru401YvKyw==",
+        "requested": "[12.1.2, )",
+        "resolved": "12.1.2",
+        "contentHash": "Tw02SZd/B42Gq6/l9IBPfuM+VsHPq7c6LXb9mT0xVjZB2UPeynfKlBgQDcrhu/SOfYUGk7tQSRmLFM2kaAjdrw==",
         "dependencies": {
           "Avalonia": "12.1.0"
         }
